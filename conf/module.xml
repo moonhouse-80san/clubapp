@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-    <!-- 일반 액션 -->
-    <action name="dispClubappIndex" type="view" />
-    <action name="index" type="view" />
-
-    <!-- API 액션 (로그인 필수) -->
-    <action name="procClubappApi" type="controller" />
-
-    <!-- 관리자 액션 -->
-    <action name="dispClubappAdminIndex" type="view" admin="true" />
-    <action name="dispClubappAdminConfig" type="view" admin="true" />
-    <action name="admin_index" type="view" admin="true" />
-    <action name="admin_config" type="view" admin="true" />
-    <action name="procClubappAdminInsertConfig" type="controller" admin="true" />
+    <grants>
+    </grants>
+    <actions>
+        <!-- 사용자 액션 -->
+        <action name="dispClubappIndex" type="view" />
+        <action name="procClubappApi" type="controller" method="POST" login_required="true" />
+        
+        <!-- 관리자 액션 (admin_index="true" 추가) -->
+        <action name="dispClubappAdminIndex" type="view" standalone="true" admin_index="true" menu_index="true" />
+        <action name="dispClubappAdminConfig" type="view" standalone="true" />
+        <action name="procClubappAdminInsertConfig" type="controller" standalone="true" method="POST" />
+    </actions>
+    <menus>
+        <menu name="clubapp" type="all">
+            <title xml:lang="ko">클럽 멤버</title>
+        </menu>
+    </menus>
 </module>

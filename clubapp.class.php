@@ -4,7 +4,10 @@
  */
 class clubapp extends ModuleObject
 {
-    /** 관리되는 테이블 목록 (접두사 제외) */
+    /** @var string 모듈 경로 */
+    public $module_path;
+    
+    /** 관리되는 테이블 목록 */
     private static $managedTables = [
         'clubapp_settings',
         'clubapp_members',
@@ -16,7 +19,16 @@ class clubapp extends ModuleObject
     ];
 
     /**
-     * 모듈 설치: schema XML로 테이블 생성
+     * 생성자
+     */
+    public function __construct()
+    {
+        // 모듈 경로 설정
+        $this->module_path = _XE_PATH_ . 'modules/clubapp/';
+    }
+
+    /**
+     * 모듈 설치
      */
     public function moduleInstall()
     {
@@ -25,32 +37,24 @@ class clubapp extends ModuleObject
 
     /**
      * 업데이트 필요 여부 확인
-     *
-     * PDO로 직접 SHOW TABLES를 실행해 테이블 존재를 확인합니다.
-     * 이 방식이 라이믹스 버전과 무관하게 가장 확실합니다.
      */
-   public function checkUpdate()
+    public function checkUpdate()
     {
-       $oDB = DB::getInstance();
+        $oDB = DB::getInstance();
 
-        // 표준 API가 있으면 테이블 존재 여부를 정확히 판별
         if (method_exists($oDB, 'isTableExists')) {
             foreach (self::$managedTables as $table) {
                 if (!$oDB->isTableExists($table)) {
                     return true;
                 }
             }
-
             return false;
         }
-
-        // 일부 환경에서 isTableExists가 없더라도 무한 업데이트 루프가 되지 않도록 처리
-        // (moduleUpdate에서 schema 기반 생성/보정을 수행)
         return false;
     }
 
     /**
-     * 업데이트 실행: 없는 테이블을 schema XML로 생성
+     * 업데이트 실행
      */
     public function moduleUpdate()
     {
@@ -58,7 +62,6 @@ class clubapp extends ModuleObject
         if (!$output->toBool()) {
             return $output;
         }
-
         return new BaseObject(0, 'success_updated');
     }
 
@@ -101,5 +104,15 @@ class clubapp extends ModuleObject
         }
 
         return new BaseObject();
+    }
+    
+    /**
+     * 관리자 메뉴 캐시 재생성 (선택사항)
+     */
+    public function recompileAdminMenu()
+    {
+        // 관리자 메뉴 캐시 파일 삭제
+        FileHandler::removeFile('./files/cache/admin_menu/module_list.php');
+        FileHandler::removeFile('./files/cache/admin_menu/' . __CLASS__ . '.php');
     }
 }

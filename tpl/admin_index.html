@@ -1,54 +1,126 @@
-<h1>클럽 앱 관리</h1>
+<div style="padding: 20px; max-width: 700px;">
+    <h1>⚙️ 클럽 앱 설정</h1>
 
-<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
-    {$XE_VALIDATOR_MESSAGE}
-</div>
+    <form action="./" method="post">
+        <input type="hidden" name="module" value="clubapp" />
+        <input type="hidden" name="act" value="procClubappAdminInsertConfig" />
+        {* CSRF 토큰 (라이믹스 표준) *}
+        <input type="hidden" name="_rx_csrf_token" value="{$GLOBALS['_rx_csrf_token']}" />
 
-<div class="x_page-header">
-    <h1>클럽 앱 대시보드</h1>
-</div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="width: 160px; padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">구장명</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="club_name" value="{$settings->club_name|escape}" style="width: 300px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 1</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="coach_1" value="{$settings->coach_1|escape}" style="width: 300px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 2</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="coach_2" value="{$settings->coach_2|escape}" style="width: 300px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 3</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="coach_3" value="{$settings->coach_3|escape}" style="width: 300px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 4</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="coach_4" value="{$settings->coach_4|escape}" style="width: 300px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 1</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="number" name="fee_preset_1" value="{$settings->fee_preset_1|intval}" style="width: 150px; padding: 5px;" /> 원
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 2</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="number" name="fee_preset_2" value="{$settings->fee_preset_2|intval}" style="width: 150px; padding: 5px;" /> 원
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 3</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="number" name="fee_preset_3" value="{$settings->fee_preset_3|intval}" style="width: 150px; padding: 5px;" /> 원
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 4</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="number" name="fee_preset_4" value="{$settings->fee_preset_4|intval}" style="width: 150px; padding: 5px;" /> 원
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 5</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="number" name="fee_preset_5" value="{$settings->fee_preset_5|intval}" style="width: 150px; padding: 5px;" /> 원
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">은행명</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="bank_name" value="{$settings->bank_name|escape}" style="width: 200px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">계좌번호</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <input type="text" name="account_number" value="{$settings->account_number|escape}" style="width: 250px; padding: 5px;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">게스트 등록 허용</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <label>
+                        <input type="radio" name="allow_guest_registration" value="Y" {if $settings->allow_guest_registration == 'Y'}checked{/if} /> 허용
+                    </label>
+                    &nbsp;
+                    <label>
+                        <input type="radio" name="allow_guest_registration" value="N" {if $settings->allow_guest_registration != 'Y'}checked{/if} /> 비허용
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회원 상세 정보 공개</th>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    <label>
+                        <input type="radio" name="show_member_details" value="Y" {if $settings->show_member_details != 'N'}checked{/if} /> 공개
+                    </label>
+                    &nbsp;
+                    <label>
+                        <input type="radio" name="show_member_details" value="N" {if $settings->show_member_details == 'N'}checked{/if} /> 비공개
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; text-align:left;">테마 색상</th>
+                <td style="padding: 10px;">
+                    <select name="theme_color" style="padding: 5px;">
+                        <option value="default" {if $settings->theme_color == 'default'}selected{/if}>기본</option>
+                        <option value="blue"    {if $settings->theme_color == 'blue'}selected{/if}>파랑</option>
+                        <option value="green"   {if $settings->theme_color == 'green'}selected{/if}>초록</option>
+                        <option value="red"     {if $settings->theme_color == 'red'}selected{/if}>빨강</option>
+                        <option value="dark"    {if $settings->theme_color == 'dark'}selected{/if}>다크</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
 
-<div class="x_clearfix">
-    <div class="x_span6" style="float: left; width: 48%; margin-right: 2%;">
-        <div class="x_well">
-            <h2>📊 현재 상태</h2>
-            <table class="x_table x_table-striped">
-                <tr>
-                    <th style="width: 120px;">전체 회원 수</th>
-                    <td>{$member_count}명</td>
-                </tr>
-                <tr>
-                    <th>모듈 버전</th>
-                    <td>1.0.0</td>
-                </tr>
-                <tr>
-                    <th>설정 상태</th>
-                    <td cond="$config->club_name">✅ 설정됨</td>
-                    <td cond="!$config->club_name">⚠️ 설정 필요</td>
-                </tr>
-            </table>
+        <div style="margin-top: 20px; padding: 10px 0;">
+            <input type="submit" value="저장" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; cursor: pointer;" />
+            <a href="{getUrl('act', 'dispClubappAdminIndex')}" style="padding: 8px 16px; background: #f44336; color: white; text-decoration: none; margin-left: 10px; display:inline-block;">취소</a>
         </div>
-    </div>
-    
-    <div class="x_span6" style="float: left; width: 48%;">
-        <div class="x_well">
-            <h2>⚙️ 빠른 설정</h2>
-            <div style="padding: 10px 0;">
-                <p><strong>구장명:</strong> {$config->club_name ?: '설정되지 않음'}</p>
-                <p><strong>코치:</strong> 
-                    <!--@foreach([$config->coach_1, $config->coach_2, $config->coach_3, $config->coach_4] as $coach)-->
-                        <!--@if($coach)-->
-                            <span class="x_label x_label-info">{$coach}</span>
-                        <!--@end-->
-                    <!--@endforeach-->
-                </p>
-                <p><strong>비로그인 등록:</strong> {$config->allow_guest_registration == 'Y' ? '허용' : '불허'}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div style="margin-top: 20px;">
-    <a href="{getUrl('act', 'dispClubappAdminConfig')}" class="x_btn x_btn-primary">⚙️ 상세 설정</a>
-    <a href="{getUrl('', 'module', 'clubapp', 'act', 'dispClubappIndex')}" class="x_btn" target="_blank">🔍 모듈 보기</a>
+    </form>
 </div>

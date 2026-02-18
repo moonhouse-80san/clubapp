@@ -2,14 +2,14 @@
 /**
  * Club App Admin Controller
  */
-class clubappAdminController extends clubapp
+class clubappAdminController extends clubapp  // ModuleObject 대신 clubapp 상속
 {
     /**
-     * 관리자 설정 저장
+     * @brief 관리자 설정 저장
      */
     public function procClubappAdminInsertConfig()
     {
-        // 관리자 권한 체크 (라이믹스 표준)
+        // 관리자 권한 체크
         $logged_info = Context::get('logged_info');
         if (empty($logged_info->member_srl) || ($logged_info->is_admin ?? 'N') !== 'Y') {
             return new BaseObject(-1, 'msg_not_permitted');
@@ -48,7 +48,7 @@ class clubappAdminController extends clubapp
             return $output;
         }
 
-        // DB 테이블에 설정 저장 (executeQuery XML 쿼리 사용)
+        // DB 테이블에 설정 저장
         $existingCount = executeQuery('clubapp.getSettings');
         $hasRecord = $existingCount && !empty($existingCount->data);
 
@@ -65,6 +65,8 @@ class clubappAdminController extends clubapp
         }
 
         $this->setMessage('success_registed');
-        $this->setRedirectUrl(getUrl('', 'module', 'clubapp', 'act', 'dispClubappAdminConfig'));
+        
+        // 리다이렉트 URL 수정
+        $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminConfig'));
     }
 }

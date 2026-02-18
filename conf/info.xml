@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<module>
-    <name>clubapp</name>
+<module version="0.2">
     <title xml:lang="ko">클럽 맴버</title>
     <description xml:lang="ko">탁구클럽 회원 관리</description>
     <version>1.0.0</version>
     <date>2026-02-18</date>
-    <author>
-        <name>80san</name>
-        <email>80san@moonhouse.co.kr</email>
+    <author email_address="80san@moonhouse.co.kr" link="https://moonhouse.co.kr">
+        <name xml:lang="ko">80san</name>
     </author>
     <category>member</category>
     
-    <skin>default</skin>
-    
-    <menu>
-        <name>clubapp</name>
-        <title xml:lang="ko">클럽 맴버</title>
-        <index>dispClubappIndex</index>
-        <actions>
-            <action name="dispClubappIndex" type="view" menu="true" title="메인" />
-        </actions>
-    </menu>
-    
+    <!-- 관리자 메뉴 설정 (중요!) -->
     <admin_menu>
-        <name>clubapp</name>
-        <title xml:lang="ko">클럽 맴버</title>
-        <index>dispClubappAdminIndex</index>
-        <actions>
-            <action name="dispClubappAdminIndex" type="view" menu="true" title="대시보드" />
-            <action name="dispClubappAdminConfig" type="view" menu="true" title="설정" />
-        </actions>
+        <menu name="clubapp">
+            <title xml:lang="ko">클럽 멤버</title>
+            <index>dispClubappAdminIndex</index>
+        </menu>
     </admin_menu>
     
     <tables>
