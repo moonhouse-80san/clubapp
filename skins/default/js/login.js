@@ -325,7 +325,14 @@ function handleSettingsClick() {
 }
 
 function hasEditPermission() {
-    return !!(currentUser && currentUser.isLogged);
+    if (!currentUser) return false;
+
+    // 라이믹스 통합 객체(isLogged)와 내부 세션 객체(role)를 모두 지원
+    if (typeof currentUser.isLogged === 'boolean') {
+        return currentUser.isLogged;
+    }
+
+    return currentUser.role === USER_ROLES.ADMIN || currentUser.role === USER_ROLES.SUB_ADMIN;
 }
 
 function canRegisterMember() {
