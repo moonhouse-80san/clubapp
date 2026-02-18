@@ -2,10 +2,10 @@
 /**
  * Club App Admin Controller
  */
-class clubappAdminController extends clubapp  // ModuleObject 대신 clubapp 상속
+class clubappAdminController extends clubapp
 {
     /**
-     * @brief 관리자 설정 저장
+     * 관리자 설정 저장
      */
     public function procClubappAdminInsertConfig()
     {
@@ -34,7 +34,6 @@ class clubappAdminController extends clubapp  // ModuleObject 대신 clubapp 상
         $config->allow_guest_registration = ($vars->allow_guest_registration === 'Y') ? 'Y' : 'N';
         $config->show_member_details  = ($vars->show_member_details === 'N') ? 'N' : 'Y';
 
-        // theme_color 화이트리스트 검증
         $allowedThemes = ['default', 'blue', 'green', 'red', 'dark'];
         $config->theme_color = in_array($vars->theme_color ?? '', $allowedThemes, true)
             ? $vars->theme_color
@@ -42,20 +41,22 @@ class clubappAdminController extends clubapp  // ModuleObject 대신 clubapp 상
 
         // 라이믹스 모듈 설정으로 저장
         $oModuleController = getController('module');
-        $output = $oModuleController->insertModuleConfig('clubapp', $config);
-
-        if (!$output->toBool()) {
-            return $output;
+        $result = $oModuleController->insertModuleConfig('clubapp', $config);
+        if ($result instanceof BaseObject && !$result->toBool()) {
+            return $result;
         }
 
         // DB 테이블에 설정 저장
-        $existingCount = executeQuery('clubapp.getSettings');
-        $hasRecord = $existingCount && !empty($existingCount->data);
-
+        $existing = executeQuery('clubapp.getSettings');
         $args = clone $config;
-        if ($hasRecord) {
+
+        if ($existing && $existing->toBool() && !empty($existing->data)) {
+            // 기존 레코드 UPDATE - id를 반드시 넘겨야 WHERE 조건이 작동함
+            $existingData = is_array($existing->data) ? $existing->data[0] : $existing->data;
+            $args->id = $existingData->id;
             $output = executeQuery('clubapp.updateSettings', $args);
         } else {
+            // 최초 INSERT
             $args->regdate = date('YmdHis');
             $output = executeQuery('clubapp.insertSettings', $args);
         }
@@ -65,8 +66,6 @@ class clubappAdminController extends clubapp  // ModuleObject 대신 clubapp 상
         }
 
         $this->setMessage('success_registed');
-        
-        // 리다이렉트 URL 수정
         $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminConfig'));
     }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="getTodayAttendanceCount" action="select">
+    <tables>
+        <table name="clubapp_attendance_current" />
+    </tables>
+    <columns>
+        <column name="count(*)" as="count" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="attendance_date" var="attendance_date" />
+    </conditions>
+</query>

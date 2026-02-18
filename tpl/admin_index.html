@@ -1,126 +1,311 @@
-<div style="padding: 20px; max-width: 700px;">
-    <h1>⚙️ 클럽 앱 설정</h1>
+<style>
+.ca-wrap { padding: 24px; max-width: 860px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 
-    <form action="./" method="post">
-        <input type="hidden" name="module" value="clubapp" />
-        <input type="hidden" name="act" value="procClubappAdminInsertConfig" />
-        {* CSRF 토큰 (라이믹스 표준) *}
-        <input type="hidden" name="_rx_csrf_token" value="{$GLOBALS['_rx_csrf_token']}" />
+/* 페이지 제목 */
+.ca-page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.ca-page-sub   { font-size: 14px; color: #888; margin-bottom: 28px; }
 
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-                <th style="width: 160px; padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">구장명</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="club_name" value="{$settings->club_name|escape}" style="width: 300px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 1</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="coach_1" value="{$settings->coach_1|escape}" style="width: 300px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 2</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="coach_2" value="{$settings->coach_2|escape}" style="width: 300px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 3</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="coach_3" value="{$settings->coach_3|escape}" style="width: 300px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">코치 4</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="coach_4" value="{$settings->coach_4|escape}" style="width: 300px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 1</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="number" name="fee_preset_1" value="{$settings->fee_preset_1|intval}" style="width: 150px; padding: 5px;" /> 원
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 2</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="number" name="fee_preset_2" value="{$settings->fee_preset_2|intval}" style="width: 150px; padding: 5px;" /> 원
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 3</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="number" name="fee_preset_3" value="{$settings->fee_preset_3|intval}" style="width: 150px; padding: 5px;" /> 원
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 4</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="number" name="fee_preset_4" value="{$settings->fee_preset_4|intval}" style="width: 150px; padding: 5px;" /> 원
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회비 프리셋 5</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="number" name="fee_preset_5" value="{$settings->fee_preset_5|intval}" style="width: 150px; padding: 5px;" /> 원
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">은행명</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="bank_name" value="{$settings->bank_name|escape}" style="width: 200px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">계좌번호</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <input type="text" name="account_number" value="{$settings->account_number|escape}" style="width: 250px; padding: 5px;" />
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">게스트 등록 허용</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <label>
-                        <input type="radio" name="allow_guest_registration" value="Y" {if $settings->allow_guest_registration == 'Y'}checked{/if} /> 허용
-                    </label>
-                    &nbsp;
-                    <label>
-                        <input type="radio" name="allow_guest_registration" value="N" {if $settings->allow_guest_registration != 'Y'}checked{/if} /> 비허용
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align:left;">회원 상세 정보 공개</th>
-                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                    <label>
-                        <input type="radio" name="show_member_details" value="Y" {if $settings->show_member_details != 'N'}checked{/if} /> 공개
-                    </label>
-                    &nbsp;
-                    <label>
-                        <input type="radio" name="show_member_details" value="N" {if $settings->show_member_details == 'N'}checked{/if} /> 비공개
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <th style="padding: 10px; text-align:left;">테마 색상</th>
-                <td style="padding: 10px;">
-                    <select name="theme_color" style="padding: 5px;">
-                        <option value="default" {if $settings->theme_color == 'default'}selected{/if}>기본</option>
-                        <option value="blue"    {if $settings->theme_color == 'blue'}selected{/if}>파랑</option>
-                        <option value="green"   {if $settings->theme_color == 'green'}selected{/if}>초록</option>
-                        <option value="red"     {if $settings->theme_color == 'red'}selected{/if}>빨강</option>
-                        <option value="dark"    {if $settings->theme_color == 'dark'}selected{/if}>다크</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
+/* 통계 카드 그리드 */
+.ca-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.ca-stat-card {
+    border-radius: 14px;
+    padding: 20px 22px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+}
+.ca-stat-card::after {
+    content: '';
+    position: absolute;
+    right: -18px; top: -18px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+}
+.ca-stat-card.blue   { background: linear-gradient(135deg,#2196F3,#1565C0); }
+.ca-stat-card.green  { background: linear-gradient(135deg,#43A047,#2E7D32); }
+.ca-stat-card.purple { background: linear-gradient(135deg,#7B1FA2,#4A148C); }
+.ca-stat-card.orange { background: linear-gradient(135deg,#FB8C00,#E65100); }
+.ca-stat-label { font-size: 13px; opacity: .85; margin-bottom: 8px; }
+.ca-stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
+.ca-stat-unit  { font-size: 14px; font-weight: 400; margin-left: 3px; opacity: .8; }
 
-        <div style="margin-top: 20px; padding: 10px 0;">
-            <input type="submit" value="저장" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; cursor: pointer;" />
-            <a href="{getUrl('act', 'dispClubappAdminIndex')}" style="padding: 8px 16px; background: #f44336; color: white; text-decoration: none; margin-left: 10px; display:inline-block;">취소</a>
+/* 섹션 제목 */
+.ca-section-title {
+    font-size: 16px; font-weight: 700; color: #333;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8eaf0;
+    display: flex; align-items: center; gap: 8px;
+}
+
+/* 빠른 메뉴 */
+.ca-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+}
+.ca-quick-btn {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px;
+    background: #fff;
+    border: 2px solid #e8eaf0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    transition: all .2s;
+    cursor: pointer;
+}
+.ca-quick-btn:hover {
+    border-color: #2196F3;
+    box-shadow: 0 4px 14px rgba(33,150,243,.15);
+    transform: translateY(-2px);
+    text-decoration: none;
+    color: #1565C0;
+}
+.ca-quick-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+.ca-quick-icon.blue   { background: #e3f2fd; }
+.ca-quick-icon.green  { background: #e8f5e9; }
+.ca-quick-icon.purple { background: #f3e5f5; }
+.ca-quick-icon.orange { background: #fff3e0; }
+.ca-quick-text-title  { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.ca-quick-text-desc   { font-size: 12px; color: #888; }
+
+/* 최근 입금 테이블 */
+.ca-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+.ca-table th {
+    background: #f5f6fa;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #e8eaf0;
+}
+.ca-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    vertical-align: middle;
+}
+.ca-table tbody tr:hover { background: #fafbff; }
+.ca-table .amount { color: #1565C0; font-weight: 700; }
+.ca-table .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.ca-table .badge-new    { background: #e8f5e9; color: #2e7d32; }
+.ca-table .badge-member { background: #e3f2fd; color: #1565C0; }
+
+/* 설정 현황 카드 */
+.ca-config-card {
+    background: #f8f9ff;
+    border: 1px solid #e8eaf0;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 32px;
+}
+.ca-config-row {
+    display: flex; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e8eaf0;
+    font-size: 14px;
+}
+.ca-config-row:last-child { border-bottom: none; }
+.ca-config-key   { color: #666; width: 140px; flex-shrink: 0; }
+.ca-config-val   { color: #222; font-weight: 500; flex: 1; }
+.ca-config-empty { color: #bbb; font-style: italic; }
+
+/* 알림 배너 */
+.ca-alert {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+}
+.ca-alert.warn { background: #fff8e1; border-left: 4px solid #FFC107; color: #7a5000; }
+.ca-alert.info { background: #e3f2fd; border-left: 4px solid #2196F3; color: #0d47a1; }
+
+/* 두 컬럼 레이아웃 */
+.ca-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 10px;
+}
+@media(max-width: 640px) {
+    .ca-two-col { grid-template-columns: 1fr; }
+    .ca-quick-grid { grid-template-columns: 1fr; }
+    .ca-stat-grid  { grid-template-columns: 1fr 1fr; }
+}
+</style>
+
+<div class="ca-wrap">
+
+    <div class="ca-page-title">🏓 클럽 앱 관리자</div>
+    <div class="ca-page-sub">클럽 회원 관리 모듈 대시보드</div>
+
+    <div class="ca-alert warn">
+        ⚠️ 구장명이 설정되지 않았습니다.
+        <a href="{getUrl('act','dispClubappAdminConfig')}" style="margin-left:8px; font-weight:700; color:#e65100; text-decoration:underline;">지금 설정하기 →</a>
+    </div>
+
+    <div class="ca-stat-grid">
+        <div class="ca-stat-card blue">
+            <div class="ca-stat-label">📋 등록 회원</div>
+            <div class="ca-stat-value">{$member_count}<span class="ca-stat-unit">명</span></div>
         </div>
-    </form>
+        <div class="ca-stat-card green">
+            <div class="ca-stat-label">👨‍🏫 등록 코치</div>
+            <div class="ca-stat-value">{$coach_count}<span class="ca-stat-unit">명</span></div>
+        </div>
+        <div class="ca-stat-card purple">
+            <div class="ca-stat-label">💰 이번달 입금</div>
+            <div class="ca-stat-value">{number_format($monthly_payment)}<span class="ca-stat-unit">원</span></div>
+        </div>
+        <div class="ca-stat-card orange">
+            <div class="ca-stat-label">📅 오늘 출석</div>
+            <div class="ca-stat-value">{$today_attendance}<span class="ca-stat-unit">명</span></div>
+        </div>
+    </div>
+
+    <div class="ca-section-title">⚡ 빠른 메뉴</div>
+    <div class="ca-quick-grid">
+        <a href="{getUrl('act','dispClubappAdminConfig')}" class="ca-quick-btn">
+            <div class="ca-quick-icon blue">⚙️</div>
+            <div>
+                <div class="ca-quick-text-title">기본 설정</div>
+                <div class="ca-quick-text-desc">구장명, 코치, 회비 프리셋</div>
+            </div>
+        </a>
+        <a href="{getUrl('module','clubapp')}" class="ca-quick-btn" target="_blank">
+            <div class="ca-quick-icon green">👥</div>
+            <div>
+                <div class="ca-quick-text-title">회원 앱 열기</div>
+                <div class="ca-quick-text-desc">프론트엔드 회원 관리 앱</div>
+            </div>
+        </a>
+        <a href="{getUrl('act','dispClubappAdminMembers')}" class="ca-quick-btn">
+            <div class="ca-quick-icon purple">📋</div>
+            <div>
+                <div class="ca-quick-text-title">회원 목록</div>
+                <div class="ca-quick-text-desc">전체 회원 조회 및 관리</div>
+            </div>
+        </a>
+        <a href="{getUrl('act','dispClubappAdminPayments')}" class="ca-quick-btn">
+            <div class="ca-quick-icon orange">💳</div>
+            <div>
+                <div class="ca-quick-text-title">입금 관리</div>
+                <div class="ca-quick-text-desc">회비 납부 현황 조회</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="ca-two-col">
+        <div>
+            <div class="ca-section-title">🔧 현재 설정 요약</div>
+            <div class="ca-config-card">
+                <div class="ca-config-row">
+                    <span class="ca-config-key">구장명</span>
+                    <span class="ca-config-val">
+                        {if $settings->club_name}{$settings->club_name}{else}<span class="ca-config-empty">미설정</span>{/if}
+                    </span>
+                </div>
+                <div class="ca-config-row">
+                    <span class="ca-config-key">코치</span>
+                    <span class="ca-config-val">
+                        {assign var='coaches' value=[]}
+                        {if $settings->coach_1}{assign var='coaches' value=$coaches|array_merge:[$settings->coach_1]}{/if}
+                        {if $settings->coach_2}{assign var='coaches' value=$coaches|array_merge:[$settings->coach_2]}{/if}
+                        {if $settings->coach_3}{assign var='coaches' value=$coaches|array_merge:[$settings->coach_3]}{/if}
+                        {if $settings->coach_4}{assign var='coaches' value=$coaches|array_merge:[$settings->coach_4]}{/if}
+                        {if $settings->coach_1 || $settings->coach_2 || $settings->coach_3 || $settings->coach_4}
+                            {$settings->coach_1}{if $settings->coach_2}, {$settings->coach_2}{/if}{if $settings->coach_3}, {$settings->coach_3}{/if}{if $settings->coach_4}, {$settings->coach_4}{/if}
+                        {else}<span class="ca-config-empty">미설정</span>{/if}
+                    </span>
+                </div>
+                <div class="ca-config-row">
+                    <span class="ca-config-key">입금 계좌</span>
+                    <span class="ca-config-val">
+                        {if $settings->bank_name}{$settings->bank_name} {$settings->account_number}{else}<span class="ca-config-empty">미설정</span>{/if}
+                    </span>
+                </div>
+                <div class="ca-config-row">
+                    <span class="ca-config-key">게스트 등록</span>
+                    <span class="ca-config-val">{if $settings->allow_guest_registration == 'Y'}✅ 허용{else}🔒 비허용{/if}</span>
+                </div>
+                <div class="ca-config-row">
+                    <span class="ca-config-key">상세정보 공개</span>
+                    <span class="ca-config-val">{if $settings->show_member_details != 'N'}✅ 공개{else}🔒 비공개{/if}</span>
+                </div>
+                <div class="ca-config-row">
+                    <span class="ca-config-key">테마</span>
+                    <span class="ca-config-val">{$settings->theme_color|default:'default'}</span>
+                </div>
+            </div>
+            <a href="{getUrl('act','dispClubappAdminConfig')}"
+               style="display:inline-block; padding:10px 20px; background:#2196F3; color:#fff;
+                      border-radius:8px; text-decoration:none; font-size:14px; font-weight:600;">
+                ⚙️ 설정 수정하기
+            </a>
+        </div>
+
+        <div>
+            <div class="ca-section-title">💰 최근 입금 내역</div>
+            {if $recent_payments}
+            <table class="ca-table">
+                <thead>
+                    <tr>
+                        <th>회원</th>
+                        <th>입금일</th>
+                        <th>금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach from=$recent_payments item=pay}
+                    <tr>
+                        <td>{$pay->member_name|default:'(알수없음)'}</td>
+                        <td>{$pay->payment_date}</td>
+                        <td class="amount">{number_format($pay->amount)}원</td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {else}
+            <div style="padding:30px; text-align:center; color:#bbb; background:#fafafa; border-radius:10px; border:1px dashed #e0e0e0;">
+                최근 입금 내역이 없습니다.
+            </div>
+            {/if}
+        </div>
+
+    </div>
+	
+    <div style="margin-top:20px; padding:14px 18px; background:#f5f6fa; border-radius:10px;
+                font-size:13px; color:#888; display:flex; gap:24px; flex-wrap:wrap;">
+        <span>📦 clubapp v1.0.0</span>
+        <span>📅 2026-02-18</span>
+        <span>👤 80san</span>
+        <a href="https://mbg1346.inour.net/index.php?module=clubapp&act=dispClubappIndex" target="_blank" style="color:#2196F3;">moonhouse.co.kr</a>
+    </div>
+
 </div>

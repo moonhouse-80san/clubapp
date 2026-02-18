@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="getRecentPayments" action="select">
+    <tables>
+        <table name="clubapp_payment_history" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>
+    <conditions>
+        <condition operation="order" column="payment_date" order="desc" />
+        <condition operation="limit" limit="20" />
+    </conditions>
+</query>

@@ -1,101 +1,936 @@
-<!--#include("_header.html")-->
+<script>
+	var currentUser = {$current_user_json};
+</script>
 
-<div class="clubapp-container">
-    <!-- 헤더 -->
-    <div class="clubapp-header">
-        <div class="sync-status" id="syncStatus" cond="$is_logged" style="display: none;">☁️ 동기화</div>
-        
-        <div class="club-name" id="clubNameDisplay">{$lang->club_name} 구장명을 설정하세요</div>
-        <div class="member-count">총 <span id="memberCount">0</span>명</div>
-        
-        <div class="user-info" cond="$is_logged">
-            <span class="user-name">{$logged_info->user_name}님</span>
-            <a href="{getUrl('act', 'dispMemberLogout')}" class="logout-btn">로그아웃</a>
+<load target="css/base.css" />
+<load target="css/login.css" />
+<load target="css/camera.css" />
+<load target="css/member.css" />
+<load target="css/calendar.css" />
+<load target="css/coach.css" />
+<load target="css/schedule.css" />
+<load target="css/report.css" />
+<load target="css/stopwatch.css" />
+<load target="css/modal.css" />
+<load target="css/responsive.css" />
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<load target="js/api.js" />
+<load target="js/base.js" />
+<load target="js/login.js" />
+<load target="js/modal.js" />
+<load target="js/settings.js" />
+<load target="js/camera.js" />
+<load target="js/member.js" />
+<load target="js/schedule.js" />
+<load target="js/form.js" />
+<load target="js/calendar.js" />
+<load target="js/coach.js" />
+<load target="js/report.js" />
+<load target="js/stopwatch.js" />
+<load target="js/voice.js" />
+
+<div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="sync-status" id="syncStatus" style="display: none;">☁️ 동기화</div>
+            
+            <div class="settings-icon" onclick="handleSettingsClick()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+            </div>
+            
+            <!-- 로그아웃 버튼 (설정 아이콘 오른쪽, 로그인 시에만 표시) -->
+            <div class="logout-icon" id="logoutIcon" onclick="logout()" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="white">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+            </div>
+            
+            <div class="club-name" id="clubNameDisplay">구장명을 설정하세요</div>
+            <div class="member-count">총<span id="memberCount">0</span></div>
         </div>
-        <div class="user-info" cond="!$is_logged">
-            <a href="{getUrl('act', 'dispMemberLogin')}" class="login-btn">로그인</a>
+
+		<!-- 검색 및 목록 섹션 -->
+		<div class="search-section">
+			<!-- 달력 - 권한에 따라 표시/숨김 -->
+			<div class="form-group full-width" id="lessonManagementSection" style="display: none;">
+				<label>레슨 관리</label>
+				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 0px;">
+					📅 <span id="calendarToggleText">달력 열기</span>
+				</button>
+				<div class="calendar-container" id="formCalendar" style="display: none;">
+					<div class="calendar-header">
+						<h3 id="formCalendarTitle">2026년 1월</h3>
+						<div class="calendar-nav">
+							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
+							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
+						</div>
+					</div>
+					<div class="calendar-grid" id="formCalendarGrid"></div>
+				</div>
+			</div>
+
+			<div class="search-box" style="margin-top:10px; position: relative;">
+				<input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()" style="flex: 1; padding-right: 50px;">
+				<button type="button" id="voiceSearchBtn" onclick="startVoiceSearch()" 
+						style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+							   background: none; border: none; font-size: 16px; cursor: pointer; 
+							   padding: 5px; color: #666; z-index: 10; display: none;"
+						title="음성으로 검색">
+					🎤
+				</button>
+			</div>
+			<div class="filter-buttons">
+				<button class="filter-btn" data-sort="name" onclick="sortMembers('name')">이름순</button>
+				<button class="filter-btn active" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순 ▼</button>
+				<button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치별</button>
+			</div>
+		</div>
+
+		<div class="tab-section" style="margin-top:10px; padding:0 10px;">
+			<div class="tabs">
+				<button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
+				<button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
+				<!-- 입금 통계 버튼 추가 -->
+				<div class="form-group full-width" id="reportSection" style="display: none;">
+					<button class="tab-btn" id="reportModalBtn" onclick="openReportModal()">
+						입금 통계
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="content-section">
+			<div id="listSection">
+				<div class="empty-state">
+					<svg fill="currentColor" viewBox="0 0 20 20">
+						<path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+					</svg>
+					<p>등록된 회원이 없습니다</p>
+				</div>
+			</div>
+
+			<div id="scheduleSection" class="schedule-section">
+				<div id="scheduleContent">
+					<!-- 일주일 스케줄이 여기에 표시됩니다 -->
+				</div>
+			</div>
+		</div>
+
+<!-- 회원 폼 섹션 - 토글 형식으로 변경 -->
+<div class="form-section">
+    <!-- 폼 헤더 - 토글 버튼 역할 -->
+    <div class="form-header" id="formHeader" onclick="toggleFormSection()">
+        <div class="form-header-content">
+            <span class="form-header-icon" id="formHeaderIcon">▼</span>
+            <span class="form-header-title" id="formHeaderTitle">➕ 회원 등록 폼</span>
+            <span class="form-header-badge" id="formHeaderBadge"></span>
+        </div>
+        <!-- 권한 없을 때 잠금 아이콘 표시 -->
+        <div class="form-header-lock" id="formHeaderLock" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="#999">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
         </div>
     </div>
+    
+    <!-- 폼 본문 (토글 컨텐츠) -->
+    <div class="form-body" id="formBody">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="name">이름 *</label>
+                <input type="text" id="name" placeholder="이름 입력">
+            </div>
 
-    <!-- 검색 및 목록 섹션 -->
-    <div class="clubapp-search-section">
-        <!-- 달력 - 권한에 따라 표시/숨김 -->
-        <div class="form-group full-width" cond="$is_logged">
-            <label>레슨 관리</label>
-            <button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 0px;">
-                📅 <span id="calendarToggleText">달력 열기</span>
-            </button>
-            <div class="calendar-container" id="formCalendar" style="display: none;">
-                <!-- 캘린더 내용 -->
+            <div class="form-group">
+                <label for="phone">전화번호</label>
+                <input type="tel" id="phone" placeholder="">
+            </div>
+
+            <!-- 코치 선택 -->
+            <div class="form-group full-width">
+                <label>담당 코치</label>
+                <div class="coach-btn-group" id="coachBtnGroup">
+                    <!-- JS에서 코치 목록을 동적으로 렌더링 -->
+                </div>
+            </div>
+
+            <!-- 레슨 관리 필드 -->
+            <div class="form-group">
+                <label for="targetCount">레슨 목표 횟수</label>
+                <input type="number" id="targetCount" placeholder="0으로 설정 시 레슨 관리 제외" value="0" min="0">
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 0으로 설정하면 레슨 관리에서 제외됩니다.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="currentCount">현재 레슨 횟수</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0; flex: 1;">
+                    <button type="button" class="photo-btn" onclick="if(hasEditPermission()) resetCurrentAttendance(); else { showAlert('로그인이 필요합니다.'); openLoginModal(); }" style="padding: 8px 12px; font-size: 12px; background: #FF9800;">
+                        🔄 초기화
+                    </button>
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 자동으로 계산됩니다. 수동으로 초기화하려면 버튼을 클릭하세요.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fee">월회비 (원)</label>
+                <input type="number" id="fee" placeholder="회비 입력">
+                <div class="fee-presets" id="feePresets">
+                    <!-- 회비 기본값 버튼들이 여기에 생성됩니다 -->
+                </div>
+            </div>
+
+            <!-- 회비 입금 내역 -->
+            <div class="form-group full-width payment-section-wrap" id="paymentSection" style="display: none;">
+                <div class="schedule-section-header">💳 회비 입금 내역</div>
+                <div class="payment-input-row">
+                    <div class="payment-input-item">
+                        <label for="paymentDate">입금날</label>
+                        <input type="date" id="paymentDate">
+                    </div>
+                    <div class="payment-input-item">
+                        <label for="paymentAmount">입금금액 (원)</label>
+                        <input type="number" id="paymentAmount" placeholder="금액 입력">
+                    </div>
+                    <button type="button" class="payment-add-btn" onclick="addPaymentEntry()">+ 추가</button>
+                </div>
+                <div class="payment-list" id="paymentList">
+                    <!-- JS에서 동적 렌더링 -->
+                </div>
+            </div>
+
+            <!-- 동적 스케줄 섹션 -->
+            <div class="form-group full-width">
+                <div class="schedule-section-header">📅 레슨 스케줄</div>
+                <div id="schedulesContainer" class="schedules-container">
+                    <!-- JavaScript로 동적 생성됩니다 -->
+                </div>
+            </div>
+
+            <!-- 기존 회원등록일 위에 새로운 필드들 추가 -->
+            <div class="form-row1">
+                <div class="form-group1">
+                    <label>성별</label>
+                    <div class="gender-btn-group">
+                        <button type="button" class="gender-btn" data-value="남">남</button>
+                        <button type="button" class="gender-btn" data-value="여">여</button>
+                    </div>
+                </div>
+
+                <div class="form-group1">
+                    <label for="birthYear">생년</label>
+                    <input type="number" id="birthYear" placeholder="예: 1990" min="1900" max="2099">
+                </div>
+
+                <div class="form-group1">
+                    <label for="skillLevel">부수</label>
+                    <select id="skillLevel">
+                        <option value="">선택</option>
+                        <option value="-2">선출</option>
+                        <option value="0">0부</option>
+                        <option value="1">1부</option>
+                        <option value="2">2부</option>
+                        <option value="3">3부</option>
+                        <option value="4">4부</option>
+                        <option value="5">5부</option>
+                        <option value="6">6부</option>
+                        <option value="7">7부</option>
+                        <option value="8">8부</option>
+                        <option value="9">9부</option>
+                        <option value="10">10부</option>
+                        <option value="11">11부</option>
+                        <option value="-1">희망</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="registerDate">회원등록일</label>
+                <input type="date" id="registerDate">
+            </div>
+            
+            <!-- 수상경력 (동적 추가) -->
+            <div class="form-group full-width">
+                <label>수상경력</label>
+                <div class="awards-section">
+                    <div class="award-input-row">
+                        <input type="text" id="awardInput" placeholder="수상경력 입력" style="flex: 1;">
+                        <button type="button" class="photo-btn" onclick="if(hasEditPermission()) addAward(); else { showAlert('로그인이 필요합니다.'); openLoginModal(); }" style="padding: 10px 15px;">+ 추가</button>
+                    </div>
+                    <div class="awards-list" id="awardsList">
+                        <!-- 수상경력 목록이 여기에 추가됨 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 기타란 -->
+            <div class="form-group full-width">
+                <label for="etc">기타</label>
+                <textarea id="etc" placeholder="기타 참고사항을 입력하세요" rows="3"></textarea>
+            </div>
+
+            <!-- 비밀글 입력란 추가 -->
+            <div class="form-group full-width" id="privateMemoSection" style="display: none;">
+                <label for="privateMemo">📝 비밀글 (관리자용)</label>
+                <textarea id="privateMemo" placeholder="관리자만 볼 수 있는 비밀 메모를 입력하세요" rows="3"></textarea>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 이 내용은 로그인 상태에서만 표시됩니다.
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="photo">회원 사진</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="photo-btn" onclick="if(hasEditPermission()) openCamera(); else { showAlert('로그인이 필요합니다.'); openLoginModal(); }" style="flex: 1;">
+                            📷 카메라 촬영
+                        </button>
+                        <button type="button" class="photo-btn" onclick="if(hasEditPermission()) document.getElementById('photoInput').click(); else { showAlert('로그인이 필요합니다.'); openLoginModal(); }" style="flex: 1;">
+                            🖼️ 갤러리 열기
+                        </button>
+                    </div>
+
+                    <div class="photo-preview-container" id="photoPreviewContainer">
+                        <div class="photo-preview">
+                            <img id="photoPreview" src="" alt="회원 사진 미리보기">
+                            <button type="button" class="remove-photo-btn" onclick="if(hasEditPermission()) removePhoto(); else { showAlert('로그인이 필요합니다.'); openLoginModal(); }">🗑️</button>
+                        </div>
+                    </div>
+
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                </div>
             </div>
         </div>
 
-        <div class="search-box" style="margin-top:10px; position: relative;">
-            <input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()" style="flex: 1; padding-right: 50px;">
-            <button type="button" id="voiceSearchBtn" onclick="startVoiceSearch()" 
-                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
-                           background: none; border: none; font-size: 16px; cursor: pointer; 
-                           padding: 5px; color: #666; z-index: 10; display: none;"
-                    title="음성으로 검색">
-                🎤
-            </button>
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" placeholder="example@email.com">
         </div>
-        <div class="filter-buttons">
-            <button class="filter-btn" data-sort="name" onclick="sortMembers('name')">이름순</button>
-            <button class="filter-btn active" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순 ▼</button>
-            <button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치별</button>
+
+        <div class="form-group">
+            <label for="address">주소</label>
+            <input type="text" id="address" placeholder="주소 입력">
+        </div>
+
+		<!-- 🔥 스케줄 상태 저장용 hidden 필드 (필수) -->
+		<input type="hidden" id="scheduleStatusField" name="scheduleStatus" value="regular">
+
+        <!-- 추가/수정/초기화 버튼 -->
+        <div class="button-group">
+            <button class="btn btn-add" onclick="addMember()" style="font-size:20px; padding:3px 5px;">등록</button>
+            <button class="btn btn-update btn-disabled" id="updateBtn" onclick="checkPermissionBeforeUpdate()" style="font-size:20px; padding:3px 5px;">수정</button>
+            <button class="btn btn-clear" onclick="clearForm()" style="font-size:20px; padding:3px 5px;">초기화</button>
         </div>
     </div>
-
-    <div class="clubapp-tab-section">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
-            <button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
-            <!-- 입금 통계 버튼 - 관리자만 표시 -->
-            <button class="tab-btn" cond="$is_admin" onclick="openReportModal()">입금 통계</button>
-        </div>
-    </div>
-
-    <div class="clubapp-content-section">
-        <div id="listSection">
-            <!-- 회원 목록이 여기에 표시됨 -->
-        </div>
-        <div id="scheduleSection" class="schedule-section" style="display: none;">
-            <div id="scheduleContent"></div>
-        </div>
-    </div>
-
-    <!-- 회원 폼 섹션 -->
-    <!--#include("_member_form.html")-->
-
-    <!-- 모달들 -->
-    <!--#include("_modals.html")-->
 </div>
 
-<!-- JS/CSS 로드 -->
-<load target="js/xlsx.full.min.js" />
-<load target="js/app.js" />
-<load target="css/base.css">
-<load target="css/login.css">
-<load target="css/camera.css">
-<load target="css/member.css">
-<load target="css/calendar.css">
-<load target="css/coach.css">
-<load target="css/schedule.css">
-<load target="css/report.css">
-<load target="css/stopwatch.css">
-<load target="css/modal.css">
-<load target="css/responsive.css">
+	<!-- 로그인 모달 -->
+	<div id="loginModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>🔑 로그인</h2>
+				<button class="close-btn" onclick="closeLoginModal()">×</button>
+			</div>
+			<div class="login-form-group">
+				<label for="loginUsername">아이디</label>
+				<input type="text" id="loginUsername" placeholder="아이디를 입력하세요" autocomplete="username">
+			</div>
+			<div class="login-form-group">
+				<label for="loginPassword">비밀번호</label>
+				<input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" autocomplete="current-password" onkeyup="if(event.key === 'Enter') login()">
+			</div>
+			<div class="login-form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+				<input type="checkbox" id="rememberLogin" style="width: auto; margin: 0;">
+				<label for="rememberLogin" style="margin: 0; cursor: pointer; font-size: 14px;">로그인 상태 유지</label>
+			</div>
+			<div class="modal-buttons">
+				<button style="background: #2196F3;" onclick="login()">로그인</button>
+				<button style="background: #9E9E9E;" onclick="closeLoginModal()">취소</button>
+			</div>
+		</div>
+	</div>
 
-<script>
-// 전역 변수 설정
-var currentUser = {
-    isLogged: {json_encode($is_logged)},
-    isAdmin: {json_encode($is_admin)},
-    userId: '{htmlspecialchars($logged_info->user_id)}',
-    userName: '{htmlspecialchars($logged_info->user_name)}',
-    memberSrl: {intval($logged_info->member_srl)}
-};
-</script>
+    <!-- 카메라 모달 -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📷 카메라</h2>
+                <button class="close-btn" onclick="closeCamera()">×</button>
+            </div>
+            <div style="text-align: center;">
+                <!-- 카메라 전환 버튼 -->
+                <div class="camera-controls">
+                    <button class="camera-btn active" id="frontCameraBtn" onclick="switchCamera('user')">
+                        📱 전면 카메라
+                    </button>
+                    <button class="camera-btn" id="rearCameraBtn" onclick="switchCamera('environment')">
+                        📷 후면 카메라
+                    </button>
+                </div>
 
-<!--#include("_footer.html")-->
+                <video id="cameraVideo" autoplay playsinline></video>
+
+                <!-- 사진 찍기 버튼 -->
+                <div class="capture-btn" onclick="capturePhoto()">
+                    <div class="capture-inner"></div>
+                </div>
+
+                <div style="text-align: center; color: #666; font-size: 14px;">
+                    사진을 찍으려면 원형 버튼을 누르세요
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스탑워치 모달 -->
+    <div id="stopwatchModal" class="modal stopwatch-modal">
+        <div class="modal-content">
+            <div class="stopwatch-header">
+                <div class="stopwatch-title" id="stopwatchTitle">⏱️ 레슨 타이머</div>
+                <div class="stopwatch-subtitle" id="stopwatchSubtitle">회원명 - 요일 00:00~00:00</div>
+            </div>
+            
+            <div class="stopwatch-display" id="stopwatchDisplay">00:00</div>
+            
+            <div class="stopwatch-progress">
+                <div class="stopwatch-progress-bar" id="stopwatchProgressBar"></div>
+            </div>
+            
+            <div class="stopwatch-controls">
+                <button class="stopwatch-btn start" id="stopwatchStartBtn" onclick="stopwatchStart()">
+                    ▶ 시작
+                </button>
+                <button class="stopwatch-btn pause" id="stopwatchPauseBtn" onclick="stopwatchPause()" style="display: none;">
+                    ⏸ 일시정지
+                </button>
+                <button class="stopwatch-btn reset" onclick="stopwatchReset()">
+                    ↺ 초기화
+                </button>
+                <button class="stopwatch-btn edit" id="stopwatchEditBtn" onclick="openScheduleEditModal()">
+                    스케줄 수정
+                </button>
+				<button class="stopwatch-btn edit" id="stopwatchTimeEditBtn" onclick="openIrregularTimeEditModal()" style="display: none; background: #9C27B0;">
+					⏱️ 시간 수정
+				</button>
+            </div>
+            
+            <div class="stopwatch-info">
+                <div class="stopwatch-info-row">
+                    <span class="stopwatch-info-label">⏳ 설정 시간</span>
+                    <span class="stopwatch-info-value" id="stopwatchTotalTime">20분</span>
+                </div>
+                <div class="stopwatch-info-row">
+                    <span class="stopwatch-info-label">✅ 레슨 체크</span>
+                    <span class="stopwatch-info-value" id="stopwatchLessonStatus">미완료</span>
+                </div>
+                <div class="stopwatch-info-row">
+                    <span class="stopwatch-info-label">📅 오늘 날짜</span>
+                    <span class="stopwatch-info-value" id="stopwatchTodayDate"><!-- 여기에 날짜가 표시됨 --></span>
+                </div>
+            </div>
+            
+            <button class="stopwatch-btn complete" id="stopwatchCompleteBtn" onclick="completeLessonFromStopwatch()" style="display: none; margin: 20px auto 0 auto; width: fit-content;">
+                ✅ 레슨 완료 및 체크
+            </button>
+
+			<!-- 알림음 선택 -->
+			<div class="stopwatch-info" style="border-top:1px solid rgba(255,255,255,0.15); padding-top:14px; margin-top:4px;">
+				<div class="stopwatch-info-row" style="align-items:center;">
+					<span class="stopwatch-info-label">🔔 알림음</span>
+					<div style="display:flex; gap:8px;">
+						<button class="alarm-sound-btn active"
+								data-sound="s"
+								onclick="setStopwatchAlarmSound('s')"
+								style="padding:5px 14px; border-radius:20px; border:2px solid #4CAF50;
+									   background:#4CAF50; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+							기본음
+						</button>
+						<button class="alarm-sound-btn"
+								data-sound="a"
+								onclick="setStopwatchAlarmSound('a')"
+								style="padding:5px 14px; border-radius:20px; border:2px solid #4CAF50;
+									   background:transparent; color:#4CAF50; font-size:13px; font-weight:600; cursor:pointer;">
+							알림음
+						</button>
+					</div>
+				</div>
+			</div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeStopwatchModal()" style="color:red">닫기</button>
+            </div>
+        </div>
+    </div>
+
+	<!-- 불규칙 레슨 시간 수정 모달 -->
+	<div id="irregularTimeEditModal" class="modal schedule-edit-modal">
+		<div class="modal-content" style="max-width: 400px;">
+			<div class="modal-header">
+				<h2 style="color: #9C27B0;">⚡ 불규칙 레슨 시간 설정</h2>
+				<button class="close-btn" onclick="closeIrregularTimeEditModal()">×</button>
+			</div>
+			<div style="padding: 20px 0;">
+				<div class="schedule-edit-field">
+					<label for="irregularMinutes" style="font-size: 16px; font-weight: 600; color: #333;">
+						레슨 시간 (분)
+					</label>
+					<div style="display: flex; gap: 10px; align-items: center;">
+						<input type="number" id="irregularMinutes" min="1" max="180" value="20" 
+							   style="flex: 1; padding: 12px; border: 2px solid #9C27B0; border-radius: 8px; font-size: 18px; font-weight: 600; text-align: center;">
+						<span style="font-size: 18px; font-weight: 600; color: #666;">분</span>
+					</div>
+					<div style="display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;">
+						<button type="button" onclick="document.getElementById('irregularMinutes').value = 10" 
+								style="padding: 8px 16px; background: #f3e5f5; border: 1px solid #9C27B0; border-radius: 20px; color: #6A1B9A; font-weight: 600; cursor: pointer;">10분</button>
+						<button type="button" onclick="document.getElementById('irregularMinutes').value = 20" 
+								style="padding: 8px 16px; background: #f3e5f5; border: 1px solid #9C27B0; border-radius: 20px; color: #6A1B9A; font-weight: 600; cursor: pointer;">20분</button>
+						<button type="button" onclick="document.getElementById('irregularMinutes').value = 30" 
+								style="padding: 8px 16px; background: #f3e5f5; border: 1px solid #9C27B0; border-radius: 20px; color: #6A1B9A; font-weight: 600; cursor: pointer;">30분</button>
+						<button type="button" onclick="document.getElementById('irregularMinutes').value = 45" 
+								style="padding: 8px 16px; background: #f3e5f5; border: 1px solid #9C27B0; border-radius: 20px; color: #6A1B9A; font-weight: 600; cursor: pointer;">45분</button>
+						<button type="button" onclick="document.getElementById('irregularMinutes').value = 60" 
+								style="padding: 8px 16px; background: #f3e5f5; border: 1px solid #9C27B0; border-radius: 20px; color: #6A1B9A; font-weight: 600; cursor: pointer;">60분</button>
+					</div>
+				</div>
+				<div class="schedule-edit-info" style="margin-top: 20px; background: #f3e5f5; border-left: 4px solid #9C27B0;">
+					⏱️ 불규칙 레슨 시간을 분 단위로 설정할 수 있습니다.<br>
+					기본값은 20분이며, 최대 180분(3시간)까지 설정 가능합니다.
+				</div>
+			</div>
+			<div class="modal-buttons">
+				<button style="background: #9C27B0; padding: 12px 24px; font-size: 16px;" onclick="saveIrregularTimeEdit()">저장</button>
+				<button style="background: #9E9E9E; padding: 12px 24px; font-size: 16px;" onclick="closeIrregularTimeEditModal()">취소</button>
+			</div>
+		</div>
+	</div>
+
+    <!-- 스케줄 수정 모달 -->
+    <div id="scheduleEditModal" class="modal schedule-edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ 스케줄 수정</h2>
+                <button class="close-btn" onclick="closeScheduleEditModal()">×</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <div class="schedule-edit-field">
+                    <label for="editScheduleDay">요일</label>
+                    <select id="editScheduleDay" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="월">월요일</option>
+                        <option value="화">화요일</option>
+                        <option value="수">수요일</option>
+                        <option value="목">목요일</option>
+                        <option value="금">금요일</option>
+                        <option value="토">토요일</option>
+                        <option value="일">일요일</option>
+                    </select>
+                </div>
+				<div class="schedule-edit-field">
+					<label>시간</label>
+					<div class="schedule-edit-time-group">
+						<input type="time" id="editScheduleStartTime" value="12:00" step="300" class="schedule-time-input">
+						<span>~</span>
+						<input type="time" id="editScheduleEndTime" value="12:20" step="300" class="schedule-time-input">
+					</div>
+				</div>
+				<div class="schedule-edit-info">
+					⏱️ 스케줄 시간을 수정하면 타이머가 자동으로 조정됩니다.<br>
+					레슨 체크는 완료 버튼을 누르면 적용됩니다.
+				</div>
+            </div>
+            <div class="modal-buttons">
+                <button style="background: #2196F3;" onclick="saveScheduleEdit()">저장</button>
+                <button style="background: #9E9E9E;" onclick="closeScheduleEditModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 설정 모달 -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ 설정</h2>
+                <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+
+			<div class="form-group set">
+                <label for="clubNameInput">구장명</label>
+                <input type="text" id="clubNameInput" placeholder="예: OO탁구장">
+            </div>
+
+            <!-- 코치 이름 설정 -->
+            <div class="form-group set">
+                <label>코치 이름 설정 (최대 4명)</label>
+                <div class="coach-settings-grid">
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 1</span>
+                        <input type="text" id="coachName1" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 2</span>
+                        <input type="text" id="coachName2" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 3</span>
+                        <input type="text" id="coachName3" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 4</span>
+                        <input type="text" id="coachName4" placeholder="코치 이름">
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    ※ 비어있는 코치는 회원 폼에서 표시되지 않음
+                </div>
+            </div>
+
+           <div class="form-group set">
+                <label>계좌번호 설정</label>
+                <input type="text" id="bankName" placeholder="은행명 (예: IM뱅크)" style="margin-bottom: 5px;">
+                <input type="text" id="accountNumber" placeholder="계좌번호">
+                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    ※ 회원 환영 문자에 계좌번호가 포함됩니다.
+                </div>
+            </div>
+
+            <div class="form-group set">
+                <label>월회비 기본값 설정</label>
+                <div class="fee-presets" style="margin-top: 10px;">
+                    <input type="number" id="feePreset1" placeholder="기본값 1" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset2" placeholder="기본값 2" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset3" placeholder="기본값 3" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset4" placeholder="기본값 4" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset5" placeholder="기본값 5" style="margin-bottom: 5px;">
+                </div>
+            </div>
+
+			<div class="form-group set">
+				<label for="themeColorSelect">전체 색상 테마</label>
+				<select id="themeColorSelect">
+					<option value="default">기본</option>
+					<option value="dark">다크</option>
+					<option value="white">화이트</option>
+					<option value="gold">골드</option>
+					<option value="orange">오렌지</option>
+				</select>
+			</div>
+
+			<div class="form-group set">
+				<label>권한 및 표시 설정</label>
+				<div style="padding: 15px; background: #f5f5f5; border-radius: 8px; margin-top: 10px;">
+					<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+						<input type="checkbox" id="allowGuestRegistration" style="width: auto; margin: 0; cursor: pointer;">
+						<label for="allowGuestRegistration" style="margin: 0; cursor: pointer; font-weight: 600;">
+							비로그인 회원 등록 허용
+						</label>
+					</div>
+					<div style="font-size: 12px; color: #666; margin-bottom: 15px; padding-left: 30px;">
+						※ 체크 시 로그인하지 않은 사용자도 회원을 등록할 수 있습니다.<br>
+						※ 보안을 위해 기본적으로는 불허되어 있습니다.
+					</div>
+					
+					<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+						<input type="checkbox" id="showMemberDetails" style="width: auto; margin: 0; cursor: pointer;" checked>
+						<label for="showMemberDetails" style="margin: 0; cursor: pointer; font-weight: 600;">
+							회원 기본정보 팝업 표시
+						</label>
+					</div>
+					<div style="font-size: 12px; color: #666; padding-left: 30px;">
+						※ 체크 해제 시 회원 이름을 클릭해도 상세 정보 팝업이 나타나지 않습니다.<br>
+						※ 관리자는 예외 없이 나타납니다.
+					</div>
+				</div>
+			</div>
+
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button style="background: #2196F3;" onclick="saveSettings()">저장</button>
+                <button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
+            </div>
+
+			<!-- 로그인 정보 및 로그아웃 -->
+			<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+				<div id="settingsLoginInfo" style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+					<div style="font-size: 14px; color: #666; margin-bottom: 8px;">현재 로그인 상태</div>
+					<div style="font-size: 16px; font-weight: 600; color: #333;" id="settingsUserStatus">👤 손님</div>
+				</div>
+				<button id="settingsLogoutBtn" style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: none;" onclick="logout(); closeSettings();">
+					🚪 로그아웃
+				</button>
+			</div>
+
+			<!-- 관리자 계정 관리 (Firebase Auth) -->
+			<div class="form-group" style="margin-top: 20px; border: 1px solid #d5d5d5; padding: 5px; border-radius: 5px;">
+				<label style="color: #FF9800; display: flex; justify-content: space-between; align-items: center;">
+					<span>👑 관리자 계정 관리</span>
+					<button type="button" class="photo-btn" onclick="openAddAdminModal()" style="padding: 5px; font-size: 13px; background: #4CAF50;">
+						➕ 새 관리자 추가
+					</button>
+				</label>
+				<div id="adminAccountsList" style="margin-top: 10px; max-height: 400px; overflow-y: auto;">
+					<!-- JavaScript에서 동적으로 관리자 목록이 표시됩니다 -->
+					<div style="padding: 20px; text-align: center; color: #999;">로딩 중...</div>
+				</div>
+				<div style="font-size: 12px; color: #666; margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px;">
+					💡 <strong>안내</strong><br>
+					• 관리자: 모든 권한 (설정 변경, 회원 관리, 레슨 체크)<br>
+					• 부관리자: 회원 관리 및 레슨 체크 가능 (설정 변경 불가)<br>
+					• 계정 생성/수정 후 해당 아이디와 비밀번호로 로그인할 수 있습니다
+				</div>
+			</div>
+
+			<!-- settingsModal 내부의 버튼 부분 수정 -->
+			<div style="margin: 20px 0; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+				<button style="width: 100%; padding: 12px; background: #2196F3; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">
+					📤 엑셀 내보내기
+				</button>
+				<button style="width: 100%; padding: 12px; background: #FF9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="downloadTemplate()">
+					📝 엑셀 템플릿 다운로드
+				</button>
+				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">
+					📥 엑셀 가져오기
+				</button>
+				<input type="file" id="importFile" accept=".xlsx,.xls" style="display: none;" onchange="importData(event)">
+			</div>
+
+			<button class="btn btn-secondary" onclick="closeSettings()" style="padding:10px 30px; display: block; margin: 0 auto; color:#444;">닫기</button>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>정말 삭제하시겠습니까?</p>
+            <div class="modal-buttons">
+                <button style="background: #f44336;" onclick="confirmDelete()">삭제</button>
+                <button style="background: #9E9E9E;" onclick="closeModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 레슨 초기화 확인 모달 -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p>현재 회원의 레슨 횟수를 초기화하시겠습니까?<br><small style="color:#999;">(레슨 기록은 유지됩니다)</small></p>
+            <div class="modal-buttons">
+                <button style="background: #FF9800;" onclick="confirmResetAttendance()">초기화</button>
+                <button style="background: #9E9E9E;" onclick="closeConfirmModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 알림 모달 -->
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <p id="alertMessage"></p>
+            <div class="modal-buttons">
+                <button style="background: #2196F3;" onclick="closeAlertModal()">확인</button>
+            </div>
+        </div>
+    </div>
+	
+	<!-- 입금 통계/리포트 모달 -->
+	<div id="reportModal" class="modal">
+		<div class="modal-content">
+			<div class="report-header">
+				<h2>📊 입금 통계 / 리포트</h2>
+				<button class="close-btn" onclick="closeReportModal()">×</button>
+			</div>
+
+			<!-- 뷰 토글 (월별/년도별) -->
+			<div class="view-toggle-container">
+				<button class="view-toggle-btn active" data-view="monthly" onclick="switchReportView('monthly')">
+					📅 월별
+				</button>
+				<button class="view-toggle-btn" data-view="yearly" onclick="switchReportView('yearly')">
+					📈 년도별
+				</button>
+			</div>
+
+			<!-- 기간 선택 -->
+			<div class="report-period-selector">
+				<select id="reportYear">
+					<!-- JavaScript로 동적 생성 -->
+				</select>
+				<div id="monthSelectContainer">
+					<select id="reportMonth">
+						<option value="1">1월</option>
+						<option value="2">2월</option>
+						<option value="3">3월</option>
+						<option value="4">4월</option>
+						<option value="5">5월</option>
+						<option value="6">6월</option>
+						<option value="7">7월</option>
+						<option value="8">8월</option>
+						<option value="9">9월</option>
+						<option value="10">10월</option>
+						<option value="11">11월</option>
+						<option value="12">12월</option>
+					</select>
+				</div>
+				<button onclick="changeReportPeriod()">조회</button>
+			</div>
+
+			<!-- 월별 리포트 섹션 -->
+			<div id="monthlyReportSection">
+				<!-- 전체 통계 카드 -->
+				<div class="stats-cards">
+					<div class="stat-card green">
+						<div class="stat-card-label">💰 실제 수입</div>
+						<div class="stat-card-value" id="totalIncomeValue">0원</div>
+					</div>
+					<div class="stat-card orange">
+						<div class="stat-card-label">📈 예상 수입</div>
+						<div class="stat-card-value" id="expectedIncomeValue">0원</div>
+					</div>
+					<div class="stat-card blue">
+						<div class="stat-card-label">✅ 납부 완료</div>
+						<div class="stat-card-value" id="paidMembersValue">0명</div>
+						<div class="stat-card-subtext" id="paidMembersSubtext">전체 0명 중</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-card-label">⚠️ 미납</div>
+						<div class="stat-card-value" id="unpaidMembersValue">0명</div>
+						<div class="stat-card-subtext" id="unpaidMembersSubtext">미납 회원</div>
+					</div>
+					<div class="stat-card green">
+						<div class="stat-card-label">📊 수납률</div>
+						<div class="stat-card-value" id="collectionRateValue">0%</div>
+					</div>
+				</div>
+
+				<!-- 월별 통계 테이블 -->
+				<h3 class="report-section-title">📅 연간 월별 통계</h3>
+				<table class="monthly-stats-table">
+					<thead>
+						<tr>
+							<th>월</th>
+							<th>실제 수입</th>
+							<th>예상 수입</th>
+							<th>차액</th>
+							<th>납부 인원</th>
+						</tr>
+					</thead>
+					<tbody id="monthlyStatsBody">
+						<!-- JavaScript로 동적 생성 -->
+					</tbody>
+				</table>
+
+				<!-- 액션 버튼 -->
+				<div class="report-actions">
+					<button class="report-action-btn export" onclick="exportReportToExcel()">
+						📥 엑셀 내보내기
+					</button>
+					<button class="report-action-btn print" onclick="printReport()">
+						🖨️ 인쇄
+					</button>
+				</div>
+
+				<!-- 회원별 납부 현황 -->
+				<h3 class="report-section-title">👥 회원별 납부 현황</h3>
+				<div class="member-payment-list" id="memberPaymentList">
+					<!-- JavaScript로 동적 생성 -->
+				</div>
+
+				<button class="btn btn-secondary" onclick="closeReportModal()" style="display: block; margin: 0 auto; color:#444;">닫기</button>
+			</div>
+
+			<!-- 년도별 리포트 섹션 -->
+			<div id="yearlyReportSection" style="display: none;">
+				<!-- 년도별 통계 카드 -->
+				<div class="stats-cards">
+					<div class="stat-card green">
+						<div class="stat-card-label">💰 연간 총 수입</div>
+						<div class="stat-card-value" id="yearTotalIncomeValue">0원</div>
+					</div>
+					<div class="stat-card orange">
+						<div class="stat-card-label">📈 연간 예상 수입</div>
+						<div class="stat-card-value" id="yearTotalExpectedValue">0원</div>
+					</div>
+					<div class="stat-card blue">
+						<div class="stat-card-label">📊 월평균 수입</div>
+						<div class="stat-card-value" id="yearAvgIncomeValue">0원</div>
+						<div class="stat-card-subtext" id="yearAvgIncomeSubtext">월평균 실제 수입</div>
+					</div>
+					<div class="stat-card green">
+						<div class="stat-card-label">🎯 최고 수입</div>
+						<div class="stat-card-value" id="yearMaxIncomeValue">0원</div>
+						<div class="stat-card-subtext" id="yearMaxIncomeSubtext">1월 최고 수입</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-card-label">📉 최저 수입</div>
+						<div class="stat-card-value" id="yearMinIncomeValue">0원</div>
+						<div class="stat-card-subtext" id="yearMinIncomeSubtext">1월 최저 수입</div>
+					</div>
+					<div class="stat-card blue">
+						<div class="stat-card-label">💵 연간 차액</div>
+						<div class="stat-card-value" id="yearDifferenceValue">0원</div>
+						<div class="stat-card-subtext" id="yearDifferenceSubtext">연간 차액</div>
+					</div>
+				</div>
+
+				<!-- 년도별 월별 상세 테이블 -->
+				<h3 class="report-section-title">📅 년도별 월별 상세 통계</h3>
+				<table class="monthly-stats-table">
+					<thead>
+						<tr>
+							<th>월</th>
+							<th>실제 수입</th>
+							<th>예상 수입</th>
+							<th>차액</th>
+							<th>수납률</th>
+							<th>납부 인원</th>
+						</tr>
+					</thead>
+					<tbody id="yearlyMonthlyBody">
+						<!-- JavaScript로 동적 생성 -->
+					</tbody>
+				</table>
+
+				<button class="btn btn-secondary" onclick="closeReportModal()" style="display: block; margin: 0 auto; color:#444;">닫기</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 분리된 JS 파일들 -->
+	<!-- 레슨 알림 모달 -->
+    <div id="attendanceAlertModal" class="modal attendance-alert-modal">
+        <div class="modal-content">
+            <div class="attendance-alert-icon">⚠️</div>
+            <h2>레슨 알림</h2>
+            <p id="attendanceAlertMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 레슨 선택 모달 -->
+	<div id="attendanceSelectModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>레슨 체크</h2>
+			</div>
+			<p>어떤 회원의 레슨을 체크하시겠습니까?</p>
+			<!-- 검색창 추가 (placeholder 수정) -->
+			<div style="margin: 15px 0;">
+				<input type="text" 
+					   id="attendanceSearchInput" 
+					   placeholder="🔍 이름 또는 전화번호로 검색..." 
+					   style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;"
+					   onkeyup="filterAttendanceMembers()">
+			</div>
+			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
+			<div class="modal-buttons">
+				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()" style="background:#444;">취소</button>
+			</div>
+		</div>
+	</div>
+
+    <!-- 알림음 오디오 -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
+    </audio>
