@@ -2,6 +2,7 @@
 <module>
     <!-- 일반 액션 -->
     <action name="dispClubappIndex" type="view" />
+    <action name="index" type="view" />
 
     <!-- API 액션 (로그인 필수) -->
     <action name="procClubappApi" type="controller" />
@@ -9,5 +10,7 @@
     <!-- 관리자 액션 -->
     <action name="dispClubappAdminIndex" type="view" admin="true" />
     <action name="dispClubappAdminConfig" type="view" admin="true" />
+    <action name="admin_index" type="view" admin="true" />
+    <action name="admin_config" type="view" admin="true" />
     <action name="procClubappAdminInsertConfig" type="controller" admin="true" />
 </module>

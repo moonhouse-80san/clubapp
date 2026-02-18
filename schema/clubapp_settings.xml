@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <table name="clubapp_settings">
-    <column name="id" type="number" size="11" notnull="true" auto_increment="true" />
-    <column name="club_name" type="varchar" size="100" />
-    <column name="coach_1" type="varchar" size="50" />
-    <column name="coach_2" type="varchar" size="50" />
-    <column name="coach_3" type="varchar" size="50" />
-    <column name="coach_4" type="varchar" size="50" />
-    <column name="fee_preset_1" type="number" size="11" default="40000" />
-    <column name="fee_preset_2" type="number" size="11" default="70000" />
-    <column name="fee_preset_3" type="number" size="11" default="100000" />
-    <column name="fee_preset_4" type="number" size="11" default="200000" />
-    <column name="fee_preset_5" type="number" size="11" default="300000" />
-    <column name="bank_name" type="varchar" size="50" />
-    <column name="account_number" type="varchar" size="50" />
-    <column name="allow_guest_registration" type="char" size="1" default="N" />
-    <column name="show_member_details" type="char" size="1" default="Y" />
-    <column name="theme_color" type="varchar" size="20" default="default" />
-    <column name="regdate" type="date" />
-    
-    <primary key>
-        <column name="id" />
-    </primary key>
+    <column name="id" type="number" size="11" notnull="true" auto_increment="true" primary_key="true"/>
+    <column name="club_name" type="varchar" size="100"/>
+    <column name="coach_1" type="varchar" size="50"/>
+    <column name="coach_2" type="varchar" size="50"/>
+    <column name="coach_3" type="varchar" size="50"/>
+    <column name="coach_4" type="varchar" size="50"/>
+    <column name="fee_preset_1" type="number" size="11" default="40000"/>
+    <column name="fee_preset_2" type="number" size="11" default="70000"/>
+    <column name="fee_preset_3" type="number" size="11" default="100000"/>
+    <column name="fee_preset_4" type="number" size="11" default="200000"/>
+    <column name="fee_preset_5" type="number" size="11" default="300000"/>
+    <column name="bank_name" type="varchar" size="50"/>
+    <column name="account_number" type="varchar" size="50"/>
+    <column name="allow_guest_registration" type="char" size="1" default="N"/>
+    <column name="show_member_details" type="char" size="1" default="Y"/>
+    <column name="theme_color" type="varchar" size="20" default="default"/>
+    <column name="regdate" type="date"/>
 </table>

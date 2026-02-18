@@ -10,7 +10,8 @@ class clubappAdminController extends clubapp
     public function procClubappAdminInsertConfig()
     {
         // 관리자 권한 체크 (라이믹스 표준)
-        if (!$this->user->isAdmin()) {
+        $logged_info = Context::get('logged_info');
+        if (empty($logged_info->member_srl) || ($logged_info->is_admin ?? 'N') !== 'Y') {
             return new BaseObject(-1, 'msg_not_permitted');
         }
 

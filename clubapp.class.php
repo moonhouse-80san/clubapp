@@ -20,8 +20,7 @@ class clubapp extends ModuleObject
      */
     public function moduleInstall()
     {
-        $this->_createOrUpdateTables();
-        return new BaseObject();
+        return $this->_createOrUpdateTables();
     }
 
     /**
@@ -30,32 +29,23 @@ class clubapp extends ModuleObject
      * PDO로 직접 SHOW TABLES를 실행해 테이블 존재를 확인합니다.
      * 이 방식이 라이믹스 버전과 무관하게 가장 확실합니다.
      */
-    public function checkUpdate()
+   public function checkUpdate()
     {
-        $dbInfo = Context::getDBInfo();
-        $prefix = $dbInfo->master_db['db_table_prefix'] ?? 'rx_';
+       $oDB = DB::getInstance();
 
-        foreach (self::$managedTables as $table) {
-            $fullName = $prefix . $table;
-
-            // executeQuery로 INFORMATION_SCHEMA 조회 (PDO 바인딩 안전)
-            $oDB = DB::getInstance();
-            $result = $oDB->executeQuery(
-                "SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.TABLES " .
-                "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . addslashes($fullName) . "'"
-            );
-
-            $cnt = 0;
-            if ($result && !empty($result->data)) {
-                $row = is_array($result->data) ? $result->data[0] : $result->data;
-                $cnt = (int)($row->cnt ?? 0);
+        // 표준 API가 있으면 테이블 존재 여부를 정확히 판별
+        if (method_exists($oDB, 'isTableExists')) {
+            foreach (self::$managedTables as $table) {
+                if (!$oDB->isTableExists($table)) {
+                    return true;
+                }
             }
 
-            if ($cnt === 0) {
-                return true;
-            }
+            return false;
         }
 
+        // 일부 환경에서 isTableExists가 없더라도 무한 업데이트 루프가 되지 않도록 처리
+        // (moduleUpdate에서 schema 기반 생성/보정을 수행)
         return false;
     }
 
@@ -64,7 +54,11 @@ class clubapp extends ModuleObject
      */
     public function moduleUpdate()
     {
-        $this->_createOrUpdateTables();
+        $output = $this->_createOrUpdateTables();
+        if (!$output->toBool()) {
+            return $output;
+        }
+
         return new BaseObject(0, 'success_updated');
     }
 
@@ -83,12 +77,29 @@ class clubapp extends ModuleObject
     {
         $oDB = DB::getInstance();
         $schemaPath = $this->module_path . 'schema/';
+        $failedTables = [];
 
         foreach (self::$managedTables as $table) {
             $xmlFile = $schemaPath . $table . '.xml';
-            if (file_exists($xmlFile)) {
-                $oDB->createTableByXmlFile($xmlFile);
+            if (!file_exists($xmlFile)) {
+                $failedTables[] = $table;
+                continue;
+            }
+
+            try {
+                $output = $oDB->createTableByXmlFile($xmlFile);
+                if ($output instanceof BaseObject && !$output->toBool()) {
+                    $failedTables[] = $table;
+                }
+            } catch (Exception $e) {
+                $failedTables[] = $table;
             }
         }
+
+        if (!empty($failedTables)) {
+            return new BaseObject(-1, 'failed_to_create_tables:' . implode(',', $failedTables));
+        }
+
+        return new BaseObject();
     }
 }

@@ -1,31 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <table name="clubapp_attendance_current">
-    <column name="id" type="number" size="11" notnull="true" auto_increment="true" />
-    <column name="member_id" type="number" size="11" notnull="true" />
-    <column name="attendance_date" type="date" notnull="true" />
-    <column name="regdate" type="date" />
-    
-    <primary key>
-        <column name="id" />
-    </primary key>
-    
-    <unique name="unique_member_date">
-        <column name="member_id" />
-        <column name="attendance_date" />
-    </unique>
-    
-    <index name="idx_member_id">
-        <column name="member_id" />
-    </index>
-    
-    <index name="idx_attendance_date">
-        <column name="attendance_date" />
-    </index>
-    
-    <foreign key name="fk_current_member">
-        <table name="clubapp_members" />
-        <column name="member_id" />
-        <references column="id" />
-        <action on delete="cascade" />
-    </foreign>
+    <column name="id" type="number" size="11" notnull="true" auto_increment="true" primary_key="true"/>
+    <column name="member_id" type="number" size="11" notnull="true"/>
+    <column name="attendance_date" type="date" notnull="true"/>
+    <column name="regdate" type="date"/>
+    <unique name="unique_member_date" columns="member_id,attendance_date"/>
+    <index name="idx_member_id" columns="member_id"/>
+    <index name="idx_attendance_date" columns="attendance_date"/>
 </table>

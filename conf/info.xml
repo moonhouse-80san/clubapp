@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <name>clubapp</name>
-    <title xml:lang="ko">클럽 앱</title>
-    <description xml:lang="ko">탁구클럽 회원 관리 앱</description>
+    <title xml:lang="ko">클럽 맴버</title>
+    <description xml:lang="ko">탁구클럽 회원 관리</description>
     <version>1.0.0</version>
-    <date>2024-01-01</date>
+    <date>2026-02-18</date>
     <author>
-        <name>Your Name</name>
-        <email>your@email.com</email>
+        <name>80san</name>
+        <email>80san@moonhouse.co.kr</email>
     </author>
     <category>member</category>
     
@@ -15,20 +15,20 @@
     
     <menu>
         <name>clubapp</name>
-        <title xml:lang="ko">클럽 앱</title>
-        <index>index</index>
+        <title xml:lang="ko">클럽 맴버</title>
+        <index>dispClubappIndex</index>
         <actions>
-            <action name="index" type="view" menu="true" title="메인" />
+            <action name="dispClubappIndex" type="view" menu="true" title="메인" />
         </actions>
     </menu>
     
     <admin_menu>
         <name>clubapp</name>
-        <title xml:lang="ko">클럽 앱</title>
-        <index>admin_index</index>
+        <title xml:lang="ko">클럽 맴버</title>
+        <index>dispClubappAdminIndex</index>
         <actions>
-            <action name="admin_index" type="view" menu="true" title="대시보드" />
-            <action name="admin_config" type="view" menu="true" title="설정" />
+            <action name="dispClubappAdminIndex" type="view" menu="true" title="대시보드" />
+            <action name="dispClubappAdminConfig" type="view" menu="true" title="설정" />
         </actions>
     </admin_menu>
     

@@ -9,7 +9,15 @@ class clubappView extends clubapp
         $this->setTemplatePath($this->module_path . 'tpl');
     }
     
-    public function dispClubappIndex()
+   /**
+     * 메뉴 별칭 액션 (info.xml의 index 대응)
+     */
+    public function index()
+    {
+        return $this->dispClubappIndex();
+    }
+
+	public function dispClubappIndex()
     {
         // 파라미터로 페이지 구분
         $page = Context::get('page');

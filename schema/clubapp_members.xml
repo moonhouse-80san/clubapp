@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <table name="clubapp_members">
-    <column name="id" type="number" size="11" notnull="true" auto_increment="true" />
-    <column name="name" type="varchar" size="100" notnull="true" />
-    <column name="phone" type="varchar" size="20" />
-    <column name="email" type="varchar" size="255" />
-    <column name="address" type="varchar" size="255" />
-    <column name="register_date" type="date" />
-    <column name="fee" type="number" size="11" default="0" />
-    <column name="coach" type="varchar" size="50" comment="라이믹스 회원 ID(user_id) 저장" />
-    <column name="target_count" type="number" size="11" default="0" />
-    <column name="current_count" type="number" size="11" default="0" />
-    <column name="gender" type="varchar" size="10" />
-    <column name="birth_year" type="number" size="11" />
-    <column name="skill_level" type="number" size="11" />
-    <column name="etc" type="text" />
-    <column name="private_memo" type="text" />
-    <column name="photo" type="varchar" size="255" comment="이미지 파일 경로" />
-    <column name="schedule_status" type="varchar" size="20" default="none" comment="regular, irregular, none" />
-    <column name="regdate" type="date" />
-    
-    <primary key>
-        <column name="id" />
-    </primary key>
-    
-    <index name="idx_coach">
-        <column name="coach" />
-    </index>
-    
-    <index name="idx_register_date">
-        <column name="register_date" />
-    </index>
+    <column name="id" type="number" size="11" notnull="true" auto_increment="true" primary_key="true"/>
+    <column name="name" type="varchar" size="100" notnull="true"/>
+    <column name="phone" type="varchar" size="20"/>
+    <column name="email" type="varchar" size="255"/>
+    <column name="address" type="varchar" size="255"/>
+    <column name="register_date" type="date"/>
+    <column name="fee" type="number" size="11" default="0"/>
+    <column name="coach" type="varchar" size="50" comment="라이믹스 회원 ID(user_id) 저장"/>
+    <column name="target_count" type="number" size="11" default="0"/>
+    <column name="current_count" type="number" size="11" default="0"/>
+    <column name="gender" type="varchar" size="10"/>
+    <column name="birth_year" type="number" size="11"/>
+    <column name="skill_level" type="number" size="11"/>
+    <column name="etc" type="text"/>
+    <column name="private_memo" type="text"/>
+    <column name="photo" type="varchar" size="255" comment="이미지 파일 경로"/>
+    <column name="schedule_status" type="varchar" size="20" default="none" comment="regular, irregular, none"/>
+    <column name="regdate" type="date"/>
+    <index name="idx_coach" columns="coach"/>
+    <index name="idx_register_date" columns="register_date"/>
 </table>
