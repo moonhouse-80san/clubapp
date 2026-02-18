@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="deleteMemberSchedules" action="delete">
+    <tables>
+        <table name="clubapp_member_schedules" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="member_id" var="member_id" />
+    </conditions>
+</query>

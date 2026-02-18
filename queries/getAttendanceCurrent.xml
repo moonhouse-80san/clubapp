@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="getAttendanceCurrent" action="select">
+    <tables>
+        <table name="clubapp_attendance_current" />
+    </tables>
+    <columns>
+        <column name="attendance_date" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="member_id" var="member_id" />
+        <condition operation="order" column="attendance_date" order="asc" />
+    </conditions>
+</query>

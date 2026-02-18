@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="updateMemberCurrentCount" action="update">
+    <tables>
+        <table name="clubapp_members" />
+    </tables>
+    <columns>
+        <column name="current_count" var="current_count" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="id" var="id" />
+    </conditions>
+</query>

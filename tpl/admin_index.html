@@ -1,0 +1,54 @@
+<h1>클럽 앱 관리</h1>
+
+<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+    {$XE_VALIDATOR_MESSAGE}
+</div>
+
+<div class="x_page-header">
+    <h1>클럽 앱 대시보드</h1>
+</div>
+
+<div class="x_clearfix">
+    <div class="x_span6" style="float: left; width: 48%; margin-right: 2%;">
+        <div class="x_well">
+            <h2>📊 현재 상태</h2>
+            <table class="x_table x_table-striped">
+                <tr>
+                    <th style="width: 120px;">전체 회원 수</th>
+                    <td>{$member_count}명</td>
+                </tr>
+                <tr>
+                    <th>모듈 버전</th>
+                    <td>1.0.0</td>
+                </tr>
+                <tr>
+                    <th>설정 상태</th>
+                    <td cond="$config->club_name">✅ 설정됨</td>
+                    <td cond="!$config->club_name">⚠️ 설정 필요</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="x_span6" style="float: left; width: 48%;">
+        <div class="x_well">
+            <h2>⚙️ 빠른 설정</h2>
+            <div style="padding: 10px 0;">
+                <p><strong>구장명:</strong> {$config->club_name ?: '설정되지 않음'}</p>
+                <p><strong>코치:</strong> 
+                    <!--@foreach([$config->coach_1, $config->coach_2, $config->coach_3, $config->coach_4] as $coach)-->
+                        <!--@if($coach)-->
+                            <span class="x_label x_label-info">{$coach}</span>
+                        <!--@end-->
+                    <!--@endforeach-->
+                </p>
+                <p><strong>비로그인 등록:</strong> {$config->allow_guest_registration == 'Y' ? '허용' : '불허'}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{getUrl('act', 'dispClubappAdminConfig')}" class="x_btn x_btn-primary">⚙️ 상세 설정</a>
+    <a href="{getUrl('', 'module', 'clubapp', 'act', 'index')}" class="x_btn" target="_blank">🔍 모듈 보기</a>
+</div>

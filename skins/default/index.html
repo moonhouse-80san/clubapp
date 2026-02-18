@@ -1,0 +1,101 @@
+<!--#include("_header.html")-->
+
+<div class="clubapp-container">
+    <!-- 헤더 -->
+    <div class="clubapp-header">
+        <div class="sync-status" id="syncStatus" cond="$is_logged" style="display: none;">☁️ 동기화</div>
+        
+        <div class="club-name" id="clubNameDisplay">{$lang->club_name} 구장명을 설정하세요</div>
+        <div class="member-count">총 <span id="memberCount">0</span>명</div>
+        
+        <div class="user-info" cond="$is_logged">
+            <span class="user-name">{$logged_info->user_name}님</span>
+            <a href="{getUrl('act', 'dispMemberLogout')}" class="logout-btn">로그아웃</a>
+        </div>
+        <div class="user-info" cond="!$is_logged">
+            <a href="{getUrl('act', 'dispMemberLogin')}" class="login-btn">로그인</a>
+        </div>
+    </div>
+
+    <!-- 검색 및 목록 섹션 -->
+    <div class="clubapp-search-section">
+        <!-- 달력 - 권한에 따라 표시/숨김 -->
+        <div class="form-group full-width" cond="$is_logged">
+            <label>레슨 관리</label>
+            <button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 0px;">
+                📅 <span id="calendarToggleText">달력 열기</span>
+            </button>
+            <div class="calendar-container" id="formCalendar" style="display: none;">
+                <!-- 캘린더 내용 -->
+            </div>
+        </div>
+
+        <div class="search-box" style="margin-top:10px; position: relative;">
+            <input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()" style="flex: 1; padding-right: 50px;">
+            <button type="button" id="voiceSearchBtn" onclick="startVoiceSearch()" 
+                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                           background: none; border: none; font-size: 16px; cursor: pointer; 
+                           padding: 5px; color: #666; z-index: 10; display: none;"
+                    title="음성으로 검색">
+                🎤
+            </button>
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn" data-sort="name" onclick="sortMembers('name')">이름순</button>
+            <button class="filter-btn active" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순 ▼</button>
+            <button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치별</button>
+        </div>
+    </div>
+
+    <div class="clubapp-tab-section">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
+            <button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
+            <!-- 입금 통계 버튼 - 관리자만 표시 -->
+            <button class="tab-btn" cond="$is_admin" onclick="openReportModal()">입금 통계</button>
+        </div>
+    </div>
+
+    <div class="clubapp-content-section">
+        <div id="listSection">
+            <!-- 회원 목록이 여기에 표시됨 -->
+        </div>
+        <div id="scheduleSection" class="schedule-section" style="display: none;">
+            <div id="scheduleContent"></div>
+        </div>
+    </div>
+
+    <!-- 회원 폼 섹션 -->
+    <!--#include("_member_form.html")-->
+
+    <!-- 모달들 -->
+    <!--#include("_modals.html")-->
+</div>
+
+<!-- JS/CSS 로드 -->
+<load target="js/xlsx.full.min.js" />
+<load target="js/app.js" />
+<load target="css/base.css">
+<load target="css/login.css">
+<load target="css/camera.css">
+<load target="css/member.css">
+<load target="css/calendar.css">
+<load target="css/coach.css">
+<load target="css/schedule.css">
+<load target="css/report.css">
+<load target="css/stopwatch.css">
+<load target="css/modal.css">
+<load target="css/responsive.css">
+
+<script>
+// 전역 변수 설정
+var currentUser = {
+    isLogged: {json_encode($is_logged)},
+    isAdmin: {json_encode($is_admin)},
+    userId: '{htmlspecialchars($logged_info->user_id)}',
+    userName: '{htmlspecialchars($logged_info->user_name)}',
+    memberSrl: {intval($logged_info->member_srl)}
+};
+</script>
+
+<!--#include("_footer.html")-->

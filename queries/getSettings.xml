@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="getSettings" action="select">
+    <tables>
+        <table name="clubapp_settings" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>
+    <conditions>
+        <condition operation="order" column="id" order="desc" />
+        <condition operation="limit" limit="1" />
+    </conditions>
+</query>

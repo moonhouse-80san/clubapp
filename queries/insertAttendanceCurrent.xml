@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="insertAttendanceCurrent" action="insert">
+    <tables>
+        <table name="clubapp_attendance_current" />
+    </tables>
+    <columns>
+        <column name="member_id" var="member_id" notnull="true" />
+        <column name="attendance_date" var="attendance_date" notnull="true" />
+        <column name="regdate" var="regdate" default="now()" />
+    </columns>
+</query>

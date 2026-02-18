@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="insertMemberSchedule" action="insert">
+    <tables>
+        <table name="clubapp_member_schedules" />
+    </tables>
+    <columns>
+        <column name="member_id" var="member_id" notnull="true" />
+        <column name="day" var="day" notnull="true" />
+        <column name="start_time" var="start_time" notnull="true" />
+        <column name="end_time" var="end_time" notnull="true" />
+        <column name="regdate" var="regdate" default="now()" />
+    </columns>
+</query>

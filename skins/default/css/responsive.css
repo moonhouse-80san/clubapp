@@ -1,0 +1,596 @@
+/* ========== 반응형 미디어 쿼리 (600px 이하) ========== */
+@media (max-width: 600px) {
+    .header {
+        padding: 5px 20px;
+    }
+
+    .search-section {
+        padding: 10px 20px;
+    }
+    
+    .search-box {
+        margin-bottom: 5px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .button-group .btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .filter-buttons {
+        margin-top: 5px;
+        font-size: 11px;
+    }
+
+    .time-group {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .time-group span {
+        order: 2;
+    }
+
+    .member-card {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .member-info-container {
+        flex: 1;
+    }
+
+    .member-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .member-name .mcardn {
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    .member-name .attendance-count {
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+
+    .member-actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .member-info {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .photo-preview {
+        width: 300px;
+        height: 300px;
+    }
+
+    #cameraModal .modal-content {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    .camera-controls {
+        flex-direction: column;
+    }
+
+    .camera-btn {
+        width: 100%;
+    }
+
+    .password-input-group {
+        flex-direction: column;
+    }
+
+    .password-input {
+        width: 100%;
+    }
+
+    .unlock-btn {
+        width: 100%;
+    }
+
+    .password-section {
+        padding: 8px 12px;
+    }
+    
+    .unlock-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .lock-tooltip {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .coach-btn {
+        padding: 8px 16px;
+        font-size: 16px;
+        margin-right: 8px;
+        margin-bottom: 6px;
+        min-height: 40px;
+    }
+    
+    .coach-btn-group {
+        gap: 8px;
+    }
+
+    .coach-settings-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .calendar-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .calendar-header h3 {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .calendar-nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .calendar-nav-btn {
+        flex: 1;
+        max-width: 120px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .calendar-grid {
+        gap: 2px;
+    }
+
+    .calendar-day-header {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+
+    .calendar-day {
+        border-width: 1px;
+        padding: 2px;
+        min-height: 40px;
+    }
+
+    .calendar-day-number {
+        font-size: 12px;
+    }
+
+    .calendar-attendance-dot {
+        width: 4px;
+        height: 4px;
+        margin-top: 1px;
+    }
+
+    .tab-section {
+        width: 100%;
+        padding: 0;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 0;
+        width: 100%;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+
+    .content-section {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        width: 100%;
+        padding: 5px 15px;
+    }
+
+    .empty-state {
+        padding: 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .form-row .form-group {
+        width: 100%;
+    }
+
+    .schedule-container {
+        gap: 4px;
+    }
+
+    .schedule-badge {
+        padding: 3px 6px;
+        font-size: 13px;
+    }
+
+    .schedule-status-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .schedule-status-label {
+        width: 100%;
+    }
+
+    .schedule-edit-time-group {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 4px;
+    }
+    
+    .schedule-edit-time-group input[type="time"] {
+        padding: 8px 6px;
+        font-size: 14px;
+    }
+    
+    .schedule-edit-time-group input[type="time"]::-webkit-datetime-edit {
+        font-size: 13px;
+    }
+    
+    .schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-hour-field,
+    .schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-minute-field {
+        padding: 0 1px;
+    }
+    
+    .schedule-edit-time-group span {
+        font-size: 14px;
+    }
+
+    .stopwatch-display {
+        font-size: 48px;
+        padding: 15px;
+    }
+    
+    .stopwatch-controls {
+        flex-wrap: wrap;
+    }
+    
+    .stopwatch-btn {
+        flex: 1;
+        min-width: 120px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    /* ===== 리포트 모바일 스타일 ===== */
+    #reportModal .modal-content {
+        padding: 15px;
+        max-height: 85vh;
+    }
+    
+    .report-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .report-header h2 {
+        font-size: 20px;
+    }
+    
+    .report-period-selector {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+    
+    .report-period-selector select,
+    .report-period-selector button {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .view-toggle-container {
+        width: 100%;
+    }
+    
+    .view-toggle-btn {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .stats-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-card-value {
+        font-size: 24px;
+    }
+    
+    .monthly-stats-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 13px;
+    }
+    
+    .monthly-stats-table th,
+    .monthly-stats-table td {
+        padding: 10px 8px;
+        white-space: nowrap;
+    }
+    
+    .monthly-stats-table th {
+        font-size: 13px;
+    }
+    
+    .member-payment-item {
+        padding: 15px;
+    }
+    
+    .member-payment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .member-payment-name {
+        font-size: 16px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .member-payment-status {
+        align-self: flex-start;
+        padding: 4px 12px;
+        font-size: 12px;
+    }
+    
+    .member-payment-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .member-payment-detail-item {
+        width: 100%;
+        justify-content: space-between;
+        padding: 4px 0;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+    
+    .member-payment-detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .report-action-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .report-section-title {
+        font-size: 18px;
+        margin: 25px 0 12px 0;
+    }
+}
+
+/* ========== 초소형 모바일 (400px 이하) ========== */
+@media (max-width: 400px) {
+    .photo-preview {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .button-group .btn {
+        font-size: 12px;
+        padding: 8px 5px;
+    }
+    
+    .btn-edit, .btn-delete {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .member-name {
+        font-size: 16px;
+    }
+
+    .member-name .attendance-count {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+    
+    .coach-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+        margin-right: 2px;
+        margin-bottom: 5px;
+        min-height: 36px;
+    }
+    
+    .coach-btn-group {
+        gap: 6px;
+    }
+
+    .coach-setting-item input {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+    
+    .schedule-badge {
+        font-size: 13px;
+        padding: 2px;
+    }
+    
+    .stopwatch-display {
+        font-size: 36px;
+    }
+	
+    .schedule-edit-time-group {
+        gap: 2px;
+    }
+    
+    .schedule-edit-time-group input[type="time"] {
+        padding: 6px 4px;
+        font-size: 13px;
+    }
+    
+    .schedule-edit-time-group input[type="time"]::-webkit-datetime-edit {
+        font-size: 12px;
+    }
+    
+    .schedule-edit-time-group span {
+        font-size: 12px;
+        padding: 0 1px;
+    }
+
+    /* ===== 리포트 초소형 모바일 ===== */
+    #reportModal .modal-content {
+        padding: 12px;
+    }
+    
+	.report-header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100%;
+        position: relative;
+    }
+    
+    .report-header h2 {
+        font-size: 18px;
+        margin: 0;
+        flex: 1;
+    }
+    
+    .report-header .close-btn {
+        position: relative;
+        right: auto;
+        top: auto;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .modal-header h2 {
+        flex: 1;
+    }
+    
+    .modal-header .close-btn {
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    
+    .view-toggle-btn {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card-value {
+        font-size: 22px;
+    }
+    
+    .stat-card-label {
+        font-size: 12px;
+    }
+    
+    .monthly-stats-table th,
+    .monthly-stats-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+    
+    .member-payment-item {
+        padding: 12px;
+    }
+    
+    .member-payment-name {
+        font-size: 15px;
+    }
+    
+    .member-payment-status {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    
+    .member-payment-detail-item {
+        font-size: 13px;
+    }
+    
+    .report-action-btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .report-section-title {
+        font-size: 16px;
+    }
+}
+
+/* ========== 다크 모드 지원 (선택사항) ========== */
+@media (prefers-color-scheme: dark) {
+    .member-payment-item {
+        background: #2d2d2d;
+        border-color: #444;
+    }
+    
+    .member-payment-name {
+        color: #fff;
+    }
+    
+    .member-payment-detail-item {
+        color: #ccc;
+    }
+    
+    .member-payment-detail-item strong {
+        color: #fff;
+    }
+}

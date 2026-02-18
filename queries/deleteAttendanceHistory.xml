@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="deleteAttendanceHistory" action="delete">
+    <tables>
+        <table name="clubapp_attendance_history" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="member_id" var="member_id" />
+        <condition operation="equal" column="attendance_date" var="attendance_date" />
+    </conditions>
+</query>

@@ -1,0 +1,82 @@
+/* ========== 코치 버튼 ========== */
+#coachBtnGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.coach-btn {
+    padding: 8px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.coach-btn:hover {
+    border-color: #4CAF50;
+    background: #f1f8e9;
+}
+
+.coach-btn.active {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+/* ========== 코치 섹션 ========== */
+.coach-section {
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.coach-section-header {
+    background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.coach-section-header:hover {
+    background: linear-gradient(135deg, #e8e8e8, #d8d8d8);
+}
+
+.coach-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-icon {
+    font-size: 14px;
+    color: #666;
+    transition: transform 0.3s;
+    display: inline-block;
+    width: 20px;
+}
+
+.coach-section.collapsed .coach-members-list {
+    display: none;
+}
+
+.coach-members-list {
+    padding: 10px;
+    display: block;
+}
+
+.coach-count {
+    background: #2196F3;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}

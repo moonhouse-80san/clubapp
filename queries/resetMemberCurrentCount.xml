@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="resetMemberCurrentCount" action="update">
+    <tables>
+        <table name="clubapp_members" />
+    </tables>
+    <columns>
+        <column name="current_count" default="0" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="id" var="id" />
+    </conditions>
+</query>

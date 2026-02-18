@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="insertPayment" action="insert">
+    <tables>
+        <table name="clubapp_payment_history" />
+    </tables>
+    <columns>
+        <column name="member_id" var="member_id" notnull="true" />
+        <column name="payment_date" var="payment_date" notnull="true" />
+        <column name="amount" var="amount" notnull="true" />
+        <column name="regdate" var="regdate" default="now()" />
+    </columns>
+</query>

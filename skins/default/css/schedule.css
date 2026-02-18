@@ -1,0 +1,545 @@
+/* ========== 시간 그룹 ========== */
+.time-group {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.set {
+    margin-bottom: 20px;
+}
+
+.set label {
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.time-group span {
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+/* ========== 스케줄 섹션 헤더 ========== */
+.schedule-section-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 15px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* ========== 회비 프리셋 ========== */
+.fee-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.fee-preset-btn {
+    padding: 6px 12px;
+    background: #f0f0f0;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.fee-preset-btn:hover {
+    background: #e0e0e0;
+}
+
+/* ========== 스케줄 섹션 ========== */
+.schedule-section {
+    display: none;
+}
+
+.schedule-section.active {
+    display: block;
+}
+
+.day-schedule {
+    margin-bottom: 25px;
+}
+
+.day-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.day-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.day-count {
+    background: #2196F3;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+/* ========== 시간 슬롯 ========== */
+.time-slot {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.3s ease;
+}
+
+.time-slot .time-range {
+    font-weight: 500;
+    color: #333;
+    min-width: 120px;
+}
+
+.time-slot .time-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.time-member {
+    background: #e3f2fd;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.time-member-coach {
+    font-size: 11px;
+    color: #666;
+    background: #f0f0f0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+
+.no-schedule {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* ========== 스케줄 배지 ========== */
+.schedule-container {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px;
+    margin-top: 5px;
+    overflow-x: visible;
+}
+
+.schedule-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 1px; 
+    font-size: 14px;
+    border-left: 3px solid #4a6bff;
+    white-space: nowrap;
+    margin: 2px 3px; 
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* 스케줄 상태별 배지 스타일 - 3단계 구분 */
+.schedule-badge.regular {
+    border-left: 3px solid #2196F3;
+    background: #e3f2fd;
+    color: #1976D2;
+}
+
+.schedule-badge.irregular {
+    border-left: 3px solid #9C27B0;
+    background: #e3f2fd;
+    color: #1976D2;
+}
+
+.schedule-badge.none {
+    border-left: 3px solid #9E9E9E;
+    background: #eeeeee;
+    color: #616161;
+}
+
+.schedule-badge-clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.schedule-badge-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* ========== 요일별 섹션 ========== */
+.day-section {
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.day-section-header {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.day-section-header:hover {
+    background: linear-gradient(135deg, #bbdefb, #90caf9);
+}
+
+.day-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.day-section.collapsed .day-schedule-content {
+    display: none;
+}
+
+.day-schedule-content {
+    padding: 10px;
+    display: block;
+}
+
+/* ========== 스케줄 컨테이너 ========== */
+.schedules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.schedule-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    animation: slideIn 0.3s ease;
+}
+
+.schedule-delete-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.schedule-delete-btn:hover {
+    background: #d32f2f;
+    transform: scale(1.1);
+}
+
+.schedule-add-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0px;
+}
+
+.schedule-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.schedule-add-btn:active {
+    transform: scale(0.95);
+}
+
+/* ========== 스케줄 상태 선택기 ========== */
+.schedule-status-selector {
+    margin-bottom: 0px;
+    padding: 15px;
+    background: #f5f7fa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.schedule-status-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.schedule-status-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.schedule-status-label:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+.schedule-status-label.regular-active {
+    border-color: #2196F3;
+    background: #e3f2fd;
+}
+
+.schedule-status-label.irregular-active {
+    border-color: #9C27B0;
+    background: #f3e5f5;
+}
+
+.schedule-status-label.none-active {
+    border-color: #9E9E9E;
+    background: #eeeeee;
+}
+
+.schedule-status-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* ========== 불규칙 레슨 안내 ========== */
+.irregular-guide {
+    padding: 25px;
+    text-align: center;
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border-radius: 16px;
+    border: 2px dashed #9C27B0;
+}
+
+.irregular-guide-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.irregular-guide-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #6A1B9A;
+    margin-bottom: 8px;
+}
+
+.irregular-guide-desc {
+    font-size: 15px;
+    color: #4A148C;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.irregular-guide-box {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 10px;
+    text-align: left;
+}
+
+/* ========== 스케줄 없음 안내 ========== */
+.no-schedule-guide {
+    padding: 25px;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 16px;
+    border: 2px solid #e0e0e0;
+}
+
+.no-schedule-guide-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.no-schedule-guide-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #616161;
+    margin-bottom: 8px;
+}
+
+.no-schedule-guide-desc {
+    font-size: 15px;
+    color: #757575;
+    margin-bottom: 10px;
+}
+
+.no-schedule-guide-notice {
+    font-size: 13px;
+    color: #999;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+/* ========== 스케줄 수정 모달 ========== */
+.schedule-edit-modal .modal-content {
+    max-width: 450px;
+}
+
+.schedule-edit-field {
+    margin-bottom: 15px;
+}
+
+.schedule-edit-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.schedule-edit-time-group {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.schedule-edit-time-group input[type="time"] {
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    background: white;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.schedule-edit-time-group input[type="time"]::-webkit-datetime-edit {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    display: inline-block;
+}
+
+.schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-hour-field,
+.schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-minute-field {
+    padding: 0 2px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.schedule-edit-time-group input[type="time"]::-webkit-datetime-edit-ampm-field {
+    font-size: 14px;
+    color: #666;
+}
+
+.schedule-edit-time-group span {
+    text-align: center;
+    color: #666;
+    font-weight: bold;
+    padding: 0 2px;
+    white-space: nowrap;
+}
+
+.schedule-edit-info {
+    font-size: 13px;
+    color: #666;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* ========== 불규칙 레슨 시간 수정 모달 ========== */
+#irregularTimeEditModal .modal-content {
+    max-width: 400px;
+    border-top: 4px solid #9C27B0;
+}
+
+#irregularTimeEditModal .schedule-edit-field input[type="number"] {
+    border-color: #9C27B0;
+    background: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+#irregularTimeEditModal .schedule-edit-field input[type="number"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+#irregularTimeEditModal .preset-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+#irregularTimeEditModal .preset-btn {
+    padding: 8px 16px;
+    background: #f3e5f5;
+    border: 1px solid #9C27B0;
+    border-radius: 20px;
+    color: #6A1B9A;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#irregularTimeEditModal .preset-btn:hover {
+    background: #9C27B0;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+}

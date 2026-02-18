@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table name="clubapp_member_schedules">
+    <column name="id" type="number" size="11" notnull="true" auto_increment="true" />
+    <column name="member_id" type="number" size="11" notnull="true" />
+    <column name="day" type="varchar" size="10" notnull="true" comment="월,화,수,목,금,토,일" />
+    <column name="start_time" type="varchar" size="5" notnull="true" comment="HH:MM 형식" />
+    <column name="end_time" type="varchar" size="5" notnull="true" comment="HH:MM 형식" />
+    <column name="regdate" type="date" />
+    
+    <primary key>
+        <column name="id" />
+    </primary key>
+    
+    <index name="idx_member_id">
+        <column name="member_id" />
+    </index>
+    
+    <index name="idx_day">
+        <column name="day" />
+    </index>
+    
+    <foreign key name="fk_schedules_member">
+        <table name="clubapp_members" />
+        <column name="member_id" />
+        <references column="id" />
+        <action on delete="cascade" />
+    </foreign>
+</table>

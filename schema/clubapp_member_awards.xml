@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table name="clubapp_member_awards">
+    <column name="id" type="number" size="11" notnull="true" auto_increment="true" />
+    <column name="member_id" type="number" size="11" notnull="true" />
+    <column name="award_text" type="varchar" size="255" notnull="true" />
+    <column name="display_order" type="number" size="11" default="0" />
+    <column name="regdate" type="date" />
+    
+    <primary key>
+        <column name="id" />
+    </primary key>
+    
+    <index name="idx_member_id">
+        <column name="member_id" />
+    </index>
+    
+    <foreign key name="fk_awards_member">
+        <table name="clubapp_members" />
+        <column name="member_id" />
+        <references column="id" />
+        <action on delete="cascade" />
+    </foreign>
+</table>

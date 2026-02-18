@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="getPaymentHistory" action="select">
+    <tables>
+        <table name="clubapp_payment_history" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="member_id" var="member_id" />
+        <condition operation="order" column="payment_date" order="desc" />
+    </conditions>
+</query>

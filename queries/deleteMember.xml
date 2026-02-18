@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="deleteMember" action="delete">
+    <tables>
+        <table name="clubapp_members" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="id" var="id" />
+    </conditions>
+</query>

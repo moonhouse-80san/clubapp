@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="updateMember" action="update">
+    <tables>
+        <table name="clubapp_members" />
+    </tables>
+    <columns>
+        <column name="name" var="name" notnull="true" />
+        <column name="phone" var="phone" notnull="false" />
+        <column name="email" var="email" notnull="false" />
+        <column name="address" var="address" notnull="false" />
+        <column name="register_date" var="register_date" notnull="false" />
+        <column name="fee" var="fee" notnull="false" />
+        <column name="coach" var="coach" notnull="false" />
+        <column name="target_count" var="target_count" notnull="false" />
+        <column name="current_count" var="current_count" notnull="false" />
+        <column name="gender" var="gender" notnull="false" />
+        <column name="birth_year" var="birth_year" notnull="false" />
+        <column name="skill_level" var="skill_level" notnull="false" />
+        <column name="etc" var="etc" notnull="false" />
+        <column name="private_memo" var="private_memo" notnull="false" />
+        <column name="photo" var="photo" notnull="false" />
+        <column name="schedule_status" var="schedule_status" notnull="false" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="id" var="id" />
+    </conditions>
+</query>

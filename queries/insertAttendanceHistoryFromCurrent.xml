@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="insertAttendanceHistoryFromCurrent" action="insert">
+    <tables>
+        <table name="clubapp_attendance_history" />
+    </tables>
+    <columns>
+        <column name="member_id" var="member_id" />
+        <column name="attendance_date" select="attendance_date" from="clubapp_attendance_current" where="member_id = :member_id" />
+        <column name="completed_at" default="now()" />
+        <column name="regdate" default="now()" />
+    </columns>
+</query>

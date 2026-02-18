@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<query id="insertMemberAward" action="insert">
+    <tables>
+        <table name="clubapp_member_awards" />
+    </tables>
+    <columns>
+        <column name="member_id" var="member_id" notnull="true" />
+        <column name="award_text" var="award_text" notnull="true" />
+        <column name="display_order" var="display_order" notnull="false" />
+        <column name="regdate" var="regdate" default="now()" />
+    </columns>
+</query>
