@@ -4,13 +4,13 @@
     </grants>
     <actions>
         <!-- 사용자 액션 -->
-        <action name="dispClubappIndex" type="view" />
-        <action name="procClubappApi" type="controller" method="POST" login_required="true" />
-        
-        <!-- 관리자 액션 (admin_index="true" 추가) -->
-        <action name="dispClubappAdminIndex" type="view" standalone="true" admin_index="true" menu_index="true" />
-        <action name="dispClubappAdminConfig" type="view" standalone="true" />
-        <action name="procClubappAdminInsertConfig" type="controller" standalone="true" method="POST" />
+        <action name="dispClubappIndex" type="view" default="true" />
+        <action name="procClubappApi"   type="controller" method="POST" login_required="true" />
+
+        <!-- 관리자 액션 -->
+        <action name="dispClubappAdminIndex"         type="view"       standalone="true" admin_index="true" menu_index="true" />
+        <action name="procClubappAdminSaveInstance"  type="controller" standalone="true" method="POST" />
+        <action name="procClubappAdminDeleteInstance" type="controller" standalone="true" method="POST" />
     </actions>
     <menus>
         <menu name="clubapp" type="all">

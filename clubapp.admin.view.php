@@ -10,93 +10,36 @@ class clubappAdminView extends clubapp
     }
 
     /**
-     * 관리자 메인 (대시보드)
+     * 관리자 메인 — 모듈 인스턴스 목록
      */
     public function dispClubappAdminIndex()
     {
-        $oModel = getModel('clubapp');
-        $settings = $oModel->getSettings();
-        Context::set('settings', $settings);
+        // 라이믹스 module 모델의 공식 메서드로 인스턴스 목록 조회
+        $oModuleModel = getModel('module');
 
-        // ── 회원 수 ──
-        $members = $oModel->getMembers();
-        Context::set('member_count', count($members));
+        $args = new stdClass();
+        $args->module = 'clubapp';
+        $output = executeQueryArray('module.getMidList', $args);
 
-        // ── 코치 수 (비어있지 않은 코치 필드 개수) ──
-        $coach_count = 0;
-        foreach (['coach_1','coach_2','coach_3','coach_4'] as $f) {
-            if (!empty($settings->$f)) $coach_count++;
-        }
-        Context::set('coach_count', $coach_count);
-
-        // ── 이번달 입금 합계 ──
-        $monthly_payment = 0;
-        $recent_payments = [];
-
-        $output = executeQuery('clubapp.getRecentPayments');
+        $module_instances = [];
         if ($output && $output->toBool() && !empty($output->data)) {
-            $rows = is_array($output->data) ? $output->data : [$output->data];
-
-            // 이름 매핑 (member_id → name)
-            $memberMap = [];
-            foreach ($members as $m) {
-                $memberMap[$m->id] = $m->name;
+            $rows = $output->data;
+            $total = count($rows);
+            foreach ($rows as $idx => $row) {
+                $r = $row->regdate ?? '';
+                $u = $row->last_update ?? $r;
+                $row->regdate_fmt     = $r ? substr($r,0,4).'-'.substr($r,4,2).'-'.substr($r,6,2).' '.substr($r,8,2).':'.substr($r,10,2).':'.substr($r,12,2) : '';
+                $row->last_update_fmt = $u ? substr($u,0,4).'-'.substr($u,4,2).'-'.substr($u,6,2).' '.substr($u,8,2).':'.substr($u,10,2).':'.substr($u,12,2) : '';
+                $row->display_title   = ($row->browser_title ?? '') ?: ($row->mid ?? '');
+                $row->title_esc       = htmlspecialchars($row->browser_title ?? '', ENT_QUOTES, 'UTF-8');
+                $row->no              = $total - $idx;
+                $module_instances[]   = $row;
             }
-
-            $thisMonth = date('Ym');
-            foreach ($rows as $row) {
-                $row->member_name = $memberMap[$row->member_id] ?? '(알수없음)';
-                // 이번달 합계
-                if (substr(str_replace('-', '', $row->payment_date), 0, 6) === $thisMonth) {
-                    $monthly_payment += (int)$row->amount;
-                }
-            }
-            // 최근 10건만
-            $recent_payments = array_slice($rows, 0, 10);
         }
-        Context::set('monthly_payment', $monthly_payment);
-        Context::set('recent_payments', $recent_payments);
 
-        // ── 오늘 출석 인원 ──
-        $today = date('Y-m-d');
-        $today_attendance = 0;
-        $attOutput = executeQuery('clubapp.getTodayAttendanceCount', (object)['attendance_date' => $today]);
-        if ($attOutput && $attOutput->toBool() && !empty($attOutput->data)) {
-            $today_attendance = (int)($attOutput->data->count ?? 0);
-        }
-        Context::set('today_attendance', $today_attendance);
+        Context::set('module_instances',      $module_instances);
+        Context::set('module_instance_count', count($module_instances));
 
         $this->setTemplateFile('admin_index');
-    }
-
-    /**
-     * 설정 페이지
-     */
-    public function dispClubappAdminConfig()
-    {
-        $oModel = getModel('clubapp');
-        $settings = $oModel->getSettings();
-
-        if (!$settings) {
-            $settings = new stdClass();
-            $settings->club_name                = '';
-            $settings->coach_1                  = '';
-            $settings->coach_2                  = '';
-            $settings->coach_3                  = '';
-            $settings->coach_4                  = '';
-            $settings->fee_preset_1             = 40000;
-            $settings->fee_preset_2             = 70000;
-            $settings->fee_preset_3             = 100000;
-            $settings->fee_preset_4             = 200000;
-            $settings->fee_preset_5             = 300000;
-            $settings->bank_name                = '';
-            $settings->account_number           = '';
-            $settings->allow_guest_registration = 'N';
-            $settings->show_member_details      = 'Y';
-            $settings->theme_color              = 'default';
-        }
-
-        Context::set('settings', $settings);
-        $this->setTemplateFile('admin_config');
     }
 }

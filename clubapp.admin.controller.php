@@ -4,68 +4,122 @@
  */
 class clubappAdminController extends clubapp
 {
-    /**
-     * 관리자 설정 저장
-     */
-    public function procClubappAdminInsertConfig()
+    private function _checkAdmin()
     {
-        // 관리자 권한 체크
         $logged_info = Context::get('logged_info');
         if (empty($logged_info->member_srl) || ($logged_info->is_admin ?? 'N') !== 'Y') {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 모듈 인스턴스(mid) 저장 — 등록 또는 수정
+     */
+    public function procClubappAdminSaveInstance()
+    {
+        if (!$this->_checkAdmin()) {
+            return new BaseObject(-1, 'msg_not_permitted');
+        }
+
+        $vars       = Context::getRequestVars();
+        $mid        = preg_replace('/[^a-zA-Z0-9_]/', '', trim($vars->module_mid ?? ''));
+        $title      = trim($vars->module_title ?? '');
+        $module_srl = (int)($vars->module_srl ?? 0);
+
+        if (empty($mid)) {
+            return new BaseObject(-1, '모듈 주소(mid)를 입력해 주세요.');
+        }
+        if (empty($title)) {
+            $title = $mid;
+        }
+
+        $oModuleController = getController('module');
+
+        if ($module_srl > 0) {
+            // 수정 — 기존 인스턴스 정보 가져와서 업데이트
+            $oModuleModel = getModel('module');
+            $module_info  = $oModuleModel->getModuleInfoByModuleSrl($module_srl);
+
+            if (!$module_info || $module_info->module !== 'clubapp') {
+                return new BaseObject(-1, '잘못된 접근입니다.');
+            }
+
+            $args                = new stdClass();
+            $args->module_srl    = $module_srl;
+            $args->mid           = $mid;
+            $args->browser_title = $title;
+            $args->module        = 'clubapp';
+            $args->skin          = $module_info->skin ?: 'default';
+            $args->layout_srl    = (int)($module_info->layout_srl ?? 0);
+
+            $output = $oModuleController->updateModule($args);
+            if (!$output->toBool()) {
+                return new BaseObject(-1, '수정에 실패했습니다: ' . $output->getMessage());
+            }
+
+        } else {
+            // 신규 등록 — mid 중복 체크
+            $oModuleModel = getModel('module');
+            $chk = $oModuleModel->getModuleInfoByMid($mid);
+            if ($chk && !empty($chk->module_srl)) {
+                return new BaseObject(-1, "이미 사용 중인 주소입니다: {$mid}");
+            }
+
+            $args                        = new stdClass();
+            $args->module                = 'clubapp';
+            $args->mid                   = $mid;
+            $args->browser_title         = $title;
+            $args->skin                  = 'default';
+            $args->layout_srl            = 0;
+            $args->mobile_layout_srl     = 0;
+            $args->is_default            = 'N';
+            $args->site_srl              = 0;
+
+            $output = $oModuleController->insertModule($args);
+            if (!$output->toBool()) {
+                return new BaseObject(-1, '등록에 실패했습니다: ' . $output->getMessage());
+            }
+        }
+
+        FileHandler::removeDir('./files/cache/module/');
+
+        $this->setMessage('저장되었습니다.');
+        $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminIndex'));
+    }
+
+    /**
+     * 모듈 인스턴스 삭제
+     */
+    public function procClubappAdminDeleteInstance()
+    {
+        if (!$this->_checkAdmin()) {
             return new BaseObject(-1, 'msg_not_permitted');
         }
 
         $vars = Context::getRequestVars();
+        $srls = $vars->module_srl ?? [];
 
-        // 입력값 검증 및 정제
-        $config = new stdClass();
-        $config->club_name            = htmlspecialchars(trim($vars->club_name ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->coach_1              = htmlspecialchars(trim($vars->coach_1 ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->coach_2              = htmlspecialchars(trim($vars->coach_2 ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->coach_3              = htmlspecialchars(trim($vars->coach_3 ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->coach_4              = htmlspecialchars(trim($vars->coach_4 ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->fee_preset_1         = (int)($vars->fee_preset_1 ?? 40000);
-        $config->fee_preset_2         = (int)($vars->fee_preset_2 ?? 70000);
-        $config->fee_preset_3         = (int)($vars->fee_preset_3 ?? 100000);
-        $config->fee_preset_4         = (int)($vars->fee_preset_4 ?? 200000);
-        $config->fee_preset_5         = (int)($vars->fee_preset_5 ?? 300000);
-        $config->bank_name            = htmlspecialchars(trim($vars->bank_name ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->account_number       = htmlspecialchars(trim($vars->account_number ?? ''), ENT_QUOTES, 'UTF-8');
-        $config->allow_guest_registration = ($vars->allow_guest_registration === 'Y') ? 'Y' : 'N';
-        $config->show_member_details  = ($vars->show_member_details === 'N') ? 'N' : 'Y';
+        if (empty($srls)) {
+            $this->setMessage('삭제할 항목을 선택해 주세요.');
+            $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminIndex'));
+            return;
+        }
 
-        $allowedThemes = ['default', 'blue', 'green', 'red', 'dark'];
-        $config->theme_color = in_array($vars->theme_color ?? '', $allowedThemes, true)
-            ? $vars->theme_color
-            : 'default';
+        if (!is_array($srls)) {
+            $srls = [$srls];
+        }
 
-        // 라이믹스 모듈 설정으로 저장
         $oModuleController = getController('module');
-        $result = $oModuleController->insertModuleConfig('clubapp', $config);
-        if ($result instanceof BaseObject && !$result->toBool()) {
-            return $result;
+        foreach ($srls as $srl) {
+            $srl = (int)$srl;
+            if ($srl <= 0) continue;
+            $oModuleController->deleteModule($srl);
         }
 
-        // DB 테이블에 설정 저장
-        $existing = executeQuery('clubapp.getSettings');
-        $args = clone $config;
+        FileHandler::removeDir('./files/cache/module/');
 
-        if ($existing && $existing->toBool() && !empty($existing->data)) {
-            // 기존 레코드 UPDATE - id를 반드시 넘겨야 WHERE 조건이 작동함
-            $existingData = is_array($existing->data) ? $existing->data[0] : $existing->data;
-            $args->id = $existingData->id;
-            $output = executeQuery('clubapp.updateSettings', $args);
-        } else {
-            // 최초 INSERT
-            $args->regdate = date('YmdHis');
-            $output = executeQuery('clubapp.insertSettings', $args);
-        }
-
-        if (!$output->toBool()) {
-            return $output;
-        }
-
-        $this->setMessage('success_registed');
-        $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminConfig'));
+        $this->setMessage('삭제되었습니다.');
+        $this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispClubappAdminIndex'));
     }
 }

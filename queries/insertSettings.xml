@@ -4,21 +4,21 @@
         <table name="clubapp_settings" />
     </tables>
     <columns>
-        <column name="club_name" var="club_name" notnull="false" />
-        <column name="coach_1" var="coach_1" notnull="false" />
-        <column name="coach_2" var="coach_2" notnull="false" />
-        <column name="coach_3" var="coach_3" notnull="false" />
-        <column name="coach_4" var="coach_4" notnull="false" />
-        <column name="fee_preset_1" var="fee_preset_1" notnull="false" />
-        <column name="fee_preset_2" var="fee_preset_2" notnull="false" />
-        <column name="fee_preset_3" var="fee_preset_3" notnull="false" />
-        <column name="fee_preset_4" var="fee_preset_4" notnull="false" />
-        <column name="fee_preset_5" var="fee_preset_5" notnull="false" />
-        <column name="bank_name" var="bank_name" notnull="false" />
-        <column name="account_number" var="account_number" notnull="false" />
+        <column name="club_name"                var="club_name"                notnull="false" />
+        <column name="coach_1"                  var="coach_1"                  notnull="false" />
+        <column name="coach_2"                  var="coach_2"                  notnull="false" />
+        <column name="coach_3"                  var="coach_3"                  notnull="false" />
+        <column name="coach_4"                  var="coach_4"                  notnull="false" />
+        <column name="fee_preset_1"             var="fee_preset_1"             notnull="false" />
+        <column name="fee_preset_2"             var="fee_preset_2"             notnull="false" />
+        <column name="fee_preset_3"             var="fee_preset_3"             notnull="false" />
+        <column name="fee_preset_4"             var="fee_preset_4"             notnull="false" />
+        <column name="fee_preset_5"             var="fee_preset_5"             notnull="false" />
+        <column name="bank_name"                var="bank_name"                notnull="false" />
+        <column name="account_number"           var="account_number"           notnull="false" />
         <column name="allow_guest_registration" var="allow_guest_registration" notnull="false" />
-        <column name="show_member_details" var="show_member_details" notnull="false" />
-        <column name="theme_color" var="theme_color" notnull="false" />
-        <column name="regdate" var="regdate" default="now()" />
+        <column name="show_member_details"      var="show_member_details"      notnull="false" />
+        <column name="theme_color"              var="theme_color"              notnull="false" />
+        <column name="regdate"                  var="regdate"                  notnull="false" />
     </columns>
 </query>

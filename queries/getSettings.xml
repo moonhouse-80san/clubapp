@@ -6,8 +6,8 @@
     <columns>
         <column name="*" />
     </columns>
-    <conditions>
-        <condition operation="order" column="id" order="desc" />
-        <condition operation="limit" limit="1" />
-    </conditions>
+    <navigation>
+        <order column="id" order="desc" />
+        <limit>1</limit>
+    </navigation>
 </query>
