@@ -1,124 +1,3 @@
-<style>
-.ca-wrap { padding: 24px; max-width: 860px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-.ca-page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
-.ca-page-sub   { font-size: 14px; color: #888; margin-bottom: 28px; }
-
-.ca-section-title {
-    font-size: 16px; font-weight: 700; color: #333;
-    margin: 0 0 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e8eaf0;
-    display: flex; align-items: center; gap: 8px;
-}
-
-.ca-inst-table {
-    width: 100%; border-collapse: collapse;
-    font-size: 13px;
-    margin-bottom: 8px;
-    border: 1px solid #dde1ec;
-}
-.ca-inst-table th {
-    background: #f5f6fa;
-    padding: 9px 12px;
-    text-align: left;
-    font-weight: 600;
-    color: #555;
-    border: 1px solid #dde1ec;
-    white-space: nowrap;
-}
-.ca-inst-table td {
-    padding: 10px 12px;
-    border: 1px solid #eef0f6;
-    color: #444;
-    vertical-align: middle;
-}
-.ca-inst-table tbody tr:hover { background: #f8f9ff; }
-.ca-inst-no   { text-align: center; color: #888; }
-.ca-inst-mid  { font-family: monospace; font-size: 13px; color: #1565C0; font-weight: 600; }
-.ca-inst-date { font-size: 12px; color: #888; white-space: nowrap; }
-.ca-inst-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    background: #e3f2fd;
-    color: #1565C0;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-}
-.ca-inst-title-link { color: #333; text-decoration: none; }
-.ca-inst-title-link:hover { color: #2196F3; text-decoration: underline; }
-.ca-inst-gear {
-    font-size: 18px;
-    color: #666;
-    cursor: pointer;
-    transition: color .15s;
-}
-.ca-inst-gear:hover { color: #2196F3; }
-.ca-inst-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 8px;
-    margin-bottom: 36px;
-}
-.ca-btn {
-    padding: 7px 18px;
-    background: #fff;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    font-size: 13px;
-    color: #333;
-    cursor: pointer;
-    display: inline-flex; align-items: center;
-    text-decoration: none;
-}
-.ca-btn:hover { background: #f5f6fa; }
-.ca-btn.danger:hover { background: #fff0f0; border-color: #e53935; color: #e53935; }
-
-.ca-reg-card {
-    background: #f8f9ff;
-    border: 1.5px solid #e8eaf0;
-    border-radius: 12px;
-    padding: 22px 24px;
-    margin-bottom: 24px;
-}
-.ca-reg-row {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 14px;
-}
-.ca-reg-row:last-child { margin-bottom: 0; }
-.ca-reg-label { width: 120px; font-size: 14px; font-weight: 600; color: #555; flex-shrink: 0; }
-.ca-reg-input {
-    flex: 1; max-width: 280px;
-    padding: 9px 13px;
-    border: 1.5px solid #dde1ec;
-    border-radius: 8px;
-    font-size: 14px;
-    background: #fff;
-}
-.ca-reg-input:focus { outline: none; border-color: #2196F3; box-shadow: 0 0 0 3px rgba(33,150,243,.1); }
-.ca-reg-hint { font-size: 12px; color: #aaa; }
-.ca-reg-submit {
-    padding: 9px 24px;
-    background: linear-gradient(135deg,#2196F3,#1565C0);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .2s;
-}
-.ca-reg-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(33,150,243,.3); }
-
-.ca-footer {
-    margin-top: 24px; padding: 14px 18px;
-    background: #f5f6fa; border-radius: 10px;
-    font-size: 13px; color: #888;
-    display: flex; gap: 24px; flex-wrap: wrap;
-}
-</style>
-
 <div class="ca-wrap">
 
     <div class="ca-page-title">🏓 클럽 앱 관리자</div>
@@ -229,16 +108,137 @@
     <div class="ca-footer">
         <span>📦 clubapp v1.0.0</span>
         <span>📅 2026-02-18</span>
-        <span>👤 80san</span>
+        <span><a href="https://mbg1346.inour.net/index.php?module=clubapp&act=dispClubappIndex">👤 80san</a></span>
     </div>
 
 </div>
 
+<style>
+	.ca-wrap { padding: 24px; max-width: 860px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+	.ca-page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+	.ca-page-sub   { font-size: 14px; color: #888; margin-bottom: 28px; }
+
+	.ca-section-title {
+		font-size: 16px; font-weight: 700; color: #333;
+		margin: 0 0 10px;
+		padding-bottom: 10px;
+		border-bottom: 2px solid #e8eaf0;
+		display: flex; align-items: center; gap: 8px;
+	}
+
+	.ca-inst-table {
+		width: 100%; border-collapse: collapse;
+		font-size: 13px;
+		margin-bottom: 8px;
+		border: 1px solid #dde1ec;
+	}
+	.ca-inst-table th {
+		background: #f5f6fa;
+		padding: 9px 12px;
+		text-align: left;
+		font-weight: 600;
+		color: #555;
+		border: 1px solid #dde1ec;
+		white-space: nowrap;
+	}
+	.ca-inst-table td {
+		padding: 10px 12px;
+		border: 1px solid #eef0f6;
+		color: #444;
+		vertical-align: middle;
+	}
+	.ca-inst-table tbody tr:hover { background: #f8f9ff; }
+	.ca-inst-no   { text-align: center; color: #888; }
+	.ca-inst-mid  { font-family: monospace; font-size: 13px; color: #1565C0; font-weight: 600; }
+	.ca-inst-date { font-size: 12px; color: #888; white-space: nowrap; }
+	.ca-inst-badge {
+		display: inline-block;
+		padding: 2px 8px;
+		background: #e3f2fd;
+		color: #1565C0;
+		border-radius: 4px;
+		font-size: 11px;
+		font-weight: 600;
+	}
+	.ca-inst-title-link { color: #333; text-decoration: none; }
+	.ca-inst-title-link:hover { color: #2196F3; text-decoration: underline; }
+	.ca-inst-gear {
+		font-size: 18px;
+		color: #666;
+		cursor: pointer;
+		transition: color .15s;
+	}
+	.ca-inst-gear:hover { color: #2196F3; }
+	.ca-inst-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: 8px;
+		margin-bottom: 36px;
+	}
+	.ca-btn {
+		padding: 7px 18px;
+		background: #fff;
+		border: 1px solid #bbb;
+		border-radius: 4px;
+		font-size: 13px;
+		color: #333;
+		cursor: pointer;
+		display: inline-flex; align-items: center;
+		text-decoration: none;
+	}
+	.ca-btn:hover { background: #f5f6fa; }
+	.ca-btn.danger:hover { background: #fff0f0; border-color: #e53935; color: #e53935; }
+
+	.ca-reg-card {
+		background: #f8f9ff;
+		border: 1.5px solid #e8eaf0;
+		border-radius: 12px;
+		padding: 22px 24px;
+		margin-bottom: 24px;
+	}
+	.ca-reg-row {
+		display: flex; align-items: center; gap: 12px;
+		margin-bottom: 14px;
+	}
+	.ca-reg-row:last-child { margin-bottom: 0; }
+	.ca-reg-label { width: 120px; font-size: 14px; font-weight: 600; color: #555; flex-shrink: 0; }
+	.ca-reg-input {
+		flex: 1; max-width: 280px;
+		padding: 9px 13px;
+		border: 1.5px solid #dde1ec;
+		border-radius: 8px;
+		font-size: 14px;
+		background: #fff;
+	}
+	.ca-reg-input:focus { outline: none; border-color: #2196F3; box-shadow: 0 0 0 3px rgba(33,150,243,.1); }
+	.ca-reg-hint { font-size: 12px; color: #aaa; }
+	.ca-reg-submit {
+		padding: 9px 24px;
+		background: linear-gradient(135deg,#2196F3,#1565C0);
+		color: #fff;
+		border: none;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 700;
+		cursor: pointer;
+		transition: all .2s;
+	}
+	.ca-reg-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(33,150,243,.3); }
+
+	.ca-footer {
+		margin-top: 24px; padding: 14px 18px;
+		background: #f5f6fa; border-radius: 10px;
+		font-size: 13px; color: #888;
+		display: flex; gap: 24px; flex-wrap: wrap;
+	}
+</style>
+
 <script>
-function caFillForm(el) {
-    document.getElementById('ca-reg-mid').value   = el.dataset.mid;
-    document.getElementById('ca-reg-title').value = el.dataset.title;
-    document.getElementById('ca-reg-srl').value   = el.dataset.srl;
-    document.getElementById('ca-reg-section').scrollIntoView({behavior: 'smooth'});
-}
+	function caFillForm(el) {
+		document.getElementById('ca-reg-mid').value   = el.dataset.mid;
+		document.getElementById('ca-reg-title').value = el.dataset.title;
+		document.getElementById('ca-reg-srl').value   = el.dataset.srl;
+		document.getElementById('ca-reg-section').scrollIntoView({behavior: 'smooth'});
+	}
 </script>
